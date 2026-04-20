@@ -36,6 +36,7 @@ from agents import (
     QAAgent,
     SenderAgent,
     ReporterAgent,
+    FollowUpAgent,
 )
 
 log = make_logger("main")
@@ -45,14 +46,16 @@ log = make_logger("main")
 
 def run_pipeline(output_dir: str = "data", api_key: str = "", apollo_key: str = "") -> None:
     """
-    Execute the 5-stage GTM Hunter pipeline end-to-end.
+    Execute the GTM Hunter pipeline end-to-end.
 
     Stages:
       1. ResearcherAgent  — fetch & enrich leads via Apollo (mock mode)
       2. QualifierAgent   — score leads, hard-disqualify ineligible ones
       3. CopywriterAgent  — generate personalised LinkedIn invite + follow-up email
       4. QAAgent          — deterministic quality gate (char limits, phrase checks)
-      5. ReporterAgent    — persist to SQLite, render self-contained HTML report
+      5. SenderAgent      — dry-run LinkedIn invite dispatch
+      6. FollowUpAgent    — dispatch follow-up emails for linkedin_sent leads ≥5 days old
+      7. ReporterAgent    — persist to SQLite, render self-contained HTML report
     """
     sep = "═" * 60
     print(f"\n{sep}")
@@ -60,7 +63,7 @@ def run_pipeline(output_dir: str = "data", api_key: str = "", apollo_key: str = 
     print(f"{sep}\n")
 
     # Apollo client — live if a key is provided, mock otherwise
-    from apollo import create_mock_client, create_live_client
+    from connectors.apollo import create_mock_client, create_live_client
     resolved_apollo_key = apollo_key or os.environ.get("APOLLO_API_KEY", "")
     if resolved_apollo_key:
         apollo_client = create_live_client(api_key=resolved_apollo_key, verbose=False)
@@ -74,6 +77,7 @@ def run_pipeline(output_dir: str = "data", api_key: str = "", apollo_key: str = 
     copywriter = CopywriterAgent(api_key=api_key, db_path=str(reporter.db_path))
     qa_agent   = QAAgent()
     sender     = SenderAgent(output_dir=output_dir)
+    follow_up  = FollowUpAgent(db_path=str(reporter.db_path), output_dir=output_dir)
 
     # Run pipeline
     leads = researcher.run()
@@ -81,19 +85,26 @@ def run_pipeline(output_dir: str = "data", api_key: str = "", apollo_key: str = 
     leads = copywriter.run(leads)
     leads = qa_agent.run(leads)
     leads = sender.run(leads)
-    reporter.run(leads)
+    follow_up.run(leads)   # dispatches follow-up emails, updates Lead objects in memory
+    reporter.run(leads)    # sees email_sent status, renders complete report
 
     # Summary
-    qualified = [l for l in leads if not l.disqualified]
-    qa_ok     = [l for l in qualified if l.qa_passed]
+    already_touched  = [l for l in leads if not l.disqualified and (l.message_type == "skipped" or l.status == "email_sent")]
+    lacks_data       = [l for l in leads if l.disqualified and "Missing contact data" in (l.disqualify_reason or "")]
+    disqualified     = [l for l in leads if l.disqualified and l not in lacks_data]
+    qualified        = [l for l in leads if not l.disqualified and l not in already_touched]
+    qa_ok            = [l for l in qualified if l.qa_passed]
 
     print(f"\n{sep}")
     print("  Pipeline Summary")
-    print(f"  Leads loaded:    {len(leads)}")
-    print(f"  Qualified:       {len(qualified)}")
-    print(f"  QA passed:       {len(qa_ok)}")
-    print(f"  DB:              {reporter.db_path}")
-    print(f"  Report:          {reporter.report_path}")
+    print(f"  Leads loaded:      {len(leads)}")
+    print(f"  Qualified:         {len(qualified)}")
+    print(f"  QA passed:         {len(qa_ok)}")
+    print(f"  Already Touched:   {len(already_touched)}")
+    print(f"  Lacks Contact Data:{len(lacks_data)}")
+    print(f"  Disqualified:      {len(disqualified)}")
+    print(f"  DB:                {reporter.db_path}")
+    print(f"  Report:            {reporter.report_path}")
     print(f"{sep}\n")
 
 
@@ -108,7 +119,10 @@ def _parse_args() -> argparse.Namespace:
         "--output-dir",
         default="data",
         metavar="DIR",
-        help="Directory for report.html and scylladb_hunter.db (default: data/)",
+        help="Base output directory (default: data/). "
+             "DB → <DIR>/DB/scylladb_hunter.db | "
+             "Reports → <DIR>/output/reports/ | "
+             "Outreach → <DIR>/output/outreach/",
     )
     parser.add_argument(
         "--api-key",

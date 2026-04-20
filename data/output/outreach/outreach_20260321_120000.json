@@ -1,0 +1,23 @@
+[
+  {
+    "triggered_at": "2026-03-21T12:00:00+00:00",
+    "dry_run": true,
+    "message_type": "cold",
+    "lead": {
+      "id": "63519a6d6fa6ba00019200f1",
+      "name": "Megan Chambers",
+      "title": "VP of Engineering",
+      "company": "VaultEdge Payments",
+      "email": "megan.chambers@vaultedgepayments.com",
+      "email_status": "verified",
+      "linkedin_url": "https://linkedin.com/in/megan-chambers",
+      "pain_category": "latency",
+      "qualification_score": 18
+    },
+    "outreach": {
+      "linkedin_invite": "Hi Megan, noticed VaultEdge runs DataStax for payment processing. ScyllaDB handles similar workloads at a fraction of the cost with better p99 latency. Worth a 15-min chat?",
+      "follow_up_email_subject": "Faster payments at lower cost — ScyllaDB for VaultEdge",
+      "follow_up_email_body": "Hi Megan,\n\nI reached out a few weeks ago about ScyllaDB as a DataStax alternative for VaultEdge Payments.\n\nGiven the real-time latency demands in payments, I wanted to share that teams migrating from DataStax to ScyllaDB typically see 40-60% cost reduction alongside better p99 tail latency — no JVM tuning required.\n\nHappy to walk through a quick architecture comparison specific to your stack.\n\nBest,\nYotam Oppenheimer\nSolutions Engineer @ ScyllaDB"
+    }
+  }
+]

@@ -5,7 +5,24 @@
       "Bash(python -c \"import json; data=json.load\\(open\\('apollo_mock_data.json'\\)\\); print\\([p.get\\('organization',{}\\).get\\('name',''\\) for p in data['people']]\\)\")",
       "Bash(python -c \"import json; data=json.load\\(open\\('apollo_mock_data.json'\\)\\); print\\(list\\(data.keys\\(\\)\\)\\)\")",
       "Bash(python main.py --help)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(rm -f data/outreach_*.json data/report_*.html)",
+      "Bash(python -c \"import sqlite3; con=sqlite3.connect\\('data/DB/scylladb_hunter.db'\\); con.executescript\\('DELETE FROM leads; DELETE FROM runs;'\\); con.commit\\(\\); print\\('DB truncated'\\)\")",
+      "Bash(docker build *)",
+      "WebSearch",
+      "WebFetch(domain:docs.docker.com)",
+      "Bash(python -c \"import sys; d=eval\\(sys.stdin.read\\(\\)\\); [print\\(k,'=',repr\\(v\\)\\) for k,v in d.items\\(\\)]\")",
+      "Bash(rm -f data/output/outreach/*.json)",
+      "Bash(rm -f data/output/reports/report_20260420_*.html data/output/outreach/outreach_20260420_*.json)",
+      "Bash(python follow_up.py)",
+      "Bash(rm -f data/output/outreach/followup_*.json)",
+      "Bash(rm data/output/reports/report_20260420_*.html)",
+      "Bash(rm data/output/outreach/*.json)",
+      "Bash(ls data/output/outreach/)",
+      "Bash(rm -f data/output/reports/report_2026042*.html data/output/outreach/*.json)",
+      "Bash(python -c \"import sqlite3; con=sqlite3.connect\\('data/DB/scylladb_hunter.db'\\); print\\('leads:', con.execute\\('SELECT COUNT\\(*\\) FROM leads'\\).fetchone\\(\\)[0]\\); print\\('runs:', con.execute\\('SELECT COUNT\\(*\\) FROM runs'\\).fetchone\\(\\)[0]\\); print\\(con.execute\\('SELECT name,status,status_updated_at FROM leads'\\).fetchall\\(\\)\\)\")",
+      "Bash(python follow_up.py --help)",
+      "Bash(python *)"
     ]
   }
 }

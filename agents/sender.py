@@ -16,7 +16,7 @@ Responsibility:
      logs what would have been sent to a console or a file is perfect."
 
 Output:
-  output/outreach_<run_id>.json  — one record per lead that would be contacted
+  data/output/outreach/outreach_<run_id>.json  — one record per lead that would be contacted
 """
 
 import json
@@ -35,7 +35,7 @@ class SenderAgent:
     log = make_logger("SenderAgent")
 
     def __init__(self, output_dir: str = "output") -> None:
-        self.output_dir = Path(output_dir)
+        self.output_dir = Path(output_dir) / "output" / "outreach"
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
     # ── Public API ────────────────────────────────────────────────────────────
@@ -54,6 +54,7 @@ class SenderAgent:
 
         run_id = actionable[0].run_id
         log_path = self.output_dir / f"outreach_{run_id}.json"
+
 
         records = []
         for lead in actionable:

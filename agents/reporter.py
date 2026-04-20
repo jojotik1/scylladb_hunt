@@ -21,6 +21,26 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
+
+def _fmt_ts(iso_ts: str) -> str:
+    """Format an ISO timestamp to a human-readable string, e.g. 'March 21, 2026 at 12:00 UTC'."""
+    if not iso_ts:
+        return "unknown date"
+    try:
+        dt = datetime.fromisoformat(iso_ts)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt.strftime("%B %-d, %Y at %H:%M UTC")
+    except Exception:
+        try:
+            # strftime with %-d is Linux-only; fall back for Windows
+            dt = datetime.fromisoformat(iso_ts)
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=timezone.utc)
+            return dt.strftime("%B %d, %Y at %H:%M UTC").replace(" 0", " ")
+        except Exception:
+            return iso_ts
+
 from models.lead import Lead
 from utils.logging import make_logger
 
@@ -117,9 +137,10 @@ def _score_bar(score: int, max_score: int = 20) -> str:
 
 def _message_type_badge(message_type: str) -> str:
     styles = {
-        "cold":         ("🧊 COLD OUTREACH",  "#0066ff"),
-        "second_touch": ("🔁 SECOND TOUCH",   "#f7c59f"),
-        "skipped":      ("⏭️ SKIPPED",         "#4a6080"),
+        "cold":         ("&#x1F9CA; COLD OUTREACH",      "#0066ff"),
+        "second_touch": ("&#x1F501; SECOND TOUCH",       "#f7c59f"),
+        "skipped":      ("&#x1F4E8; LINKEDIN SENT",      "#4a9eff"),
+        "email_sent":   ("&#x1F4E7; FOLLOW-UP SENT",     "#00ff88"),
     }
     label, color = styles.get(message_type, ("UNKNOWN", "#555"))
     return (
@@ -138,12 +159,30 @@ def _lead_card(lead: Lead, show_copy: bool = True) -> str:
         items = "".join(f"<li>{html.escape(i)}</li>" for i in lead.qa_issues)
         qa_issues_html = f'<ul class="qa-issues">{items}</ul>'
 
+    # Badge key: use status for email_sent leads so the right badge renders
+    badge_key = "email_sent" if lead.status == "email_sent" else lead.message_type
+
     # Copy / disqualification / skipped block
     copy_section = ""
-    if lead.message_type == "skipped":
+    if lead.status == "email_sent" and lead.follow_up_email_subject:
+        escaped_subject  = html.escape(lead.follow_up_email_subject)
+        escaped_body     = html.escape(lead.follow_up_email_body).replace("\n", "<br>")
+        followup_sent_at = _fmt_ts(lead.status_updated_at)
+        copy_section = f"""
+        <div class="copy-section">
+          <div class="disq-reason" style="color:#00ff88;background:rgba(0,255,136,.07);border:1px solid rgba(0,255,136,.2);margin-bottom:12px">
+            &#x1F4E7; Follow-up email sent on <strong>{followup_sent_at}</strong> &mdash; LinkedIn invite was unanswered for 5+ days.
+          </div>
+          <div class="copy-label">Email Subject</div>
+          <div class="copy-box subject-box">{escaped_subject}</div>
+          <div class="copy-label" style="margin-top:12px">Follow-up Email</div>
+          <div class="copy-box email-box">{escaped_body}</div>
+        </div>"""
+    elif lead.message_type == "skipped":
+        linkedin_sent_at = _fmt_ts(lead.status_updated_at)
         copy_section = (
-            '<div class="disq-reason" style="color:var(--muted)">'
-            '⏭️ Skipped — contacted less than 6 months ago. No new message generated.'
+            '<div class="disq-reason" style="color:#4a9eff;background:rgba(74,158,255,.07);border:1px solid rgba(74,158,255,.2)">'
+            f'&#x1F4E8; LinkedIn message sent on <strong>{linkedin_sent_at}</strong> &mdash; awaiting response before follow-up email.'
             '</div>'
         )
     elif show_copy and lead.linkedin_invite and lead.linkedin_invite != "[GENERATION FAILED]":
@@ -152,11 +191,21 @@ def _lead_card(lead: Lead, show_copy: bool = True) -> str:
         escaped_invite  = html.escape(lead.linkedin_invite)
         escaped_subject = html.escape(lead.follow_up_email_subject)
         escaped_body    = html.escape(lead.follow_up_email_body).replace("\n", "<br>")
+        variant_badge = ""
+        if lead.qa_selected_variant and lead.copy_variants:
+            n = lead.qa_selected_variant
+            total = len(lead.copy_variants)
+            variant_badge = (
+                f'<span style="font-family:var(--mono);font-size:10px;padding:2px 8px;'
+                f'border:1px solid #4a6080;border-radius:4px;color:#4a6080;'
+                f'letter-spacing:.08em;margin-left:8px">QA: variant {n}/{total}</span>'
+            )
         copy_section = f"""
         <div class="copy-section">
           <div class="copy-label">
             LinkedIn Invite
             <span style="color:{len_color};font-size:11px">({invite_len}/300 chars)</span>
+            {variant_badge}
           </div>
           <div class="copy-box linkedin-box">{escaped_invite}</div>
           <div class="copy-label" style="margin-top:12px">Email Subject</div>
@@ -182,7 +231,7 @@ def _lead_card(lead: Lead, show_copy: bool = True) -> str:
           </div>
         </div>
         <div class="lead-meta">
-          {_message_type_badge(lead.message_type)}
+          {_message_type_badge(badge_key)}
           {_pain_badge(lead.pain_category)}
           {_score_bar(lead.qualification_score)}
           <div class="lead-email">
@@ -240,10 +289,18 @@ _CSS = """\
   .stat-label { font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.08em; }
   /* Section headers */
   .section-header { font-family:var(--mono); font-size:13px; color:var(--muted);
-    text-transform:uppercase; letter-spacing:.12em; margin-bottom:16px; padding-bottom:8px;
-    border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }
+    text-transform:uppercase; letter-spacing:.12em; margin-bottom:0; padding:14px 12px;
+    border:1px solid var(--border); border-radius:8px; display:flex; align-items:center;
+    gap:8px; cursor:pointer; user-select:none; transition:background .15s,border-color .15s; }
+  .section-header:hover { background:var(--surface2); border-color:var(--accent2); color:var(--text); }
   .section-header .count { background:var(--accent); color:var(--bg); padding:1px 7px;
     border-radius:10px; font-size:11px; font-weight:700; }
+  .section-header .chevron { margin-left:auto; font-size:14px; transition:transform .25s; color:var(--muted); }
+  .section-header.open { border-color:var(--accent2); background:var(--surface2); color:var(--text); border-radius:8px 8px 0 0; }
+  .section-header.open .chevron { transform:rotate(180deg); }
+  .section-body { border:1px solid var(--accent2); border-top:none; border-radius:0 0 8px 8px;
+    padding:20px; display:none; }
+  .section-body.open { display:block; }
   /* Lead cards */
   .lead-card { background:var(--surface); border:1px solid var(--border); border-radius:10px;
     padding:24px; margin-bottom:20px; transition:border-color .2s; }
@@ -292,7 +349,7 @@ _CSS = """\
   /* Footer */
   footer { padding:32px 0 48px; margin-top:48px; border-top:1px solid var(--border);
     font-family:var(--mono); font-size:11px; color:var(--muted); text-align:center; }
-  .section { margin-bottom:48px; }"""
+  .section { margin-bottom:12px; }"""
 
 
 # ── Agent ─────────────────────────────────────────────────────────────────────
@@ -308,8 +365,10 @@ class ReporterAgent:
         db_dir           = self.output_dir / "DB"
         db_dir.mkdir(parents=True, exist_ok=True)
         self.db_path     = db_dir / "scylladb_hunter.db"
+        reports_dir      = self.output_dir / "output" / "reports"
+        reports_dir.mkdir(parents=True, exist_ok=True)
         ts = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-        self.report_path = self.output_dir / f"report_{ts}.html"
+        self.report_path = reports_dir / f"report_{ts}.html"
         self._init_db()
 
     # ── Public API ────────────────────────────────────────────────────────────
@@ -426,9 +485,12 @@ class ReporterAgent:
                     pain_angle              = excluded.pain_angle,
                     disqualified            = excluded.disqualified,
                     disqualify_reason       = excluded.disqualify_reason,
-                    linkedin_invite         = excluded.linkedin_invite,
-                    follow_up_email_subject = excluded.follow_up_email_subject,
-                    follow_up_email_body    = excluded.follow_up_email_body,
+                    linkedin_invite         = CASE WHEN excluded.linkedin_invite IS NOT NULL AND excluded.linkedin_invite != ''
+                                                   THEN excluded.linkedin_invite ELSE leads.linkedin_invite END,
+                    follow_up_email_subject = CASE WHEN excluded.follow_up_email_subject IS NOT NULL AND excluded.follow_up_email_subject != ''
+                                                   THEN excluded.follow_up_email_subject ELSE leads.follow_up_email_subject END,
+                    follow_up_email_body    = CASE WHEN excluded.follow_up_email_body IS NOT NULL AND excluded.follow_up_email_body != ''
+                                                   THEN excluded.follow_up_email_body ELSE leads.follow_up_email_body END,
                     qa_passed               = excluded.qa_passed,
                     qa_issues               = excluded.qa_issues,
                     processed_at            = excluded.processed_at,
@@ -474,8 +536,10 @@ class ReporterAgent:
 
     def _build_html(self, leads: list[Lead]) -> str:
         lacks_data   = [l for l in leads if l.status == "needs_enrichment"]
-        already_sent = [l for l in leads if not l.disqualified and l.message_type == "skipped"]
-        qualified    = [l for l in leads if not l.disqualified and l.message_type != "skipped"]
+        already_sent = [l for l in leads if not l.disqualified and (
+                            l.message_type == "skipped" or l.status == "email_sent")]
+        qualified    = [l for l in leads if not l.disqualified
+                        and l.message_type != "skipped" and l.status != "email_sent"]
         disqualified = [l for l in leads if l.disqualified and l.status != "needs_enrichment"]
         qa_passed    = [l for l in qualified if l.qa_passed]
         run_id       = leads[0].run_id if leads else "N/A"
@@ -487,6 +551,19 @@ class ReporterAgent:
         already_sent_cards = "\n".join(_lead_card(l, show_copy=True)  for l in already_sent)
 
         no_leads_msg = '<p style="color:var(--muted);font-size:13px">None.</p>'
+
+        def _section(icon: str, title: str, count: int, cards: str) -> str:
+            body = cards or no_leads_msg
+            return f"""
+<section class="section">
+  <div class="section-header" onclick="toggleSection(this)">
+    {icon} {title} <span class="count">{count}</span>
+    <span class="chevron">&#9660;</span>
+  </div>
+  <div class="section-body">
+    {body}
+  </div>
+</section>"""
 
         return f"""<!DOCTYPE html>
 <html lang="en">
@@ -505,7 +582,7 @@ class ReporterAgent:
 <header>
   <div class="header-top">
     <div class="logo-area">
-      <h1>🦑 <span>Scylla</span>DB GTM Hunter</h1>
+      <h1>&#x1F991; <span>Scylla</span>DB GTM Hunter</h1>
       <div class="subtitle">// DataStax competitor displacement — automated pipeline</div>
     </div>
     <div class="run-badge">Run <strong>{run_id}</strong><br>{ts}</div>
@@ -521,40 +598,25 @@ class ReporterAgent:
   {_stat_card(len(disqualified), "Disqualified",   "#ff4d6d")}
 </div>
 
-<section class="section">
-  <div class="section-header">
-    ✅ Qualified Leads <span class="count">{len(qualified)}</span>
-  </div>
-  {qualified_cards or no_leads_msg}
-</section>
-
-<section class="section">
-  <div class="section-header">
-    ⏭️ Already Touched — last 180 days <span class="count">{len(already_sent)}</span>
-  </div>
-  {already_sent_cards or no_leads_msg}
-</section>
-
-<section class="section">
-  <div class="section-header">
-    🔍 Lacks Contact Data — needs re-enrichment <span class="count">{len(lacks_data)}</span>
-  </div>
-  {lacks_data_cards or no_leads_msg}
-</section>
-
-<section class="section">
-  <div class="section-header">
-    ❌ Disqualified Leads <span class="count">{len(disqualified)}</span>
-  </div>
-  {disqualified_cards or no_leads_msg}
-</section>
+{_section("&#x2705;", "Qualified Leads", len(qualified), qualified_cards)}
+{_section("&#x23ED;&#xFE0F;", "Already Touched &mdash; last 180 days", len(already_sent), already_sent_cards)}
+{_section("&#x1F50D;", "Lacks Contact Data &mdash; needs re-enrichment", len(lacks_data), lacks_data_cards)}
+{_section("&#x274C;", "Disqualified Leads", len(disqualified), disqualified_cards)}
 
 </div>
 
 <footer>
   <div class="container">
-    Generated by ScyllaDB GTM Hunter · {ts} · {len(leads)} leads processed
+    Generated by ScyllaDB GTM Hunter &middot; {ts} &middot; {len(leads)} leads processed
   </div>
 </footer>
+
+<script>
+  function toggleSection(header) {{
+    header.classList.toggle('open');
+    const body = header.nextElementSibling;
+    body.classList.toggle('open');
+  }}
+</script>
 </body>
 </html>"""

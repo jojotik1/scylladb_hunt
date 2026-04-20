@@ -70,6 +70,8 @@ class Lead:
     # ── QA result (set by QAAgent) ────────────────────────────────────────────
     qa_passed: bool = False
     qa_issues: list[str] = field(default_factory=list)
+    copy_variants: list[dict] = field(default_factory=list)   # transient — not persisted
+    qa_selected_variant: int = 0                              # 1-indexed; 0 = no selection
 
     # ── Outreach status (set by SenderAgent, updated externally) ─────────────
     status: str = "pending"              # pending | linkedin_sent | email_sent | response_received

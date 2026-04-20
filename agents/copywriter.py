@@ -88,7 +88,7 @@ Instructions:
    - Para 2: one concrete ScyllaDB advantage tied to their pain angle
    - Para 3: a relevant proof point (real ScyllaDB customer if applicable)
    - Para 4: low-pressure CTA (15-min call, or just a question)
-   Sign with: "— Alex Chen, Solutions Engineer @ ScyllaDB"
+   Sign with: "— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
 
 Respond ONLY with valid JSON (no markdown fences):
 {{
@@ -113,7 +113,7 @@ SECOND_TOUCH_TEMPLATES: dict[str, dict] = {
         "email_body": lambda l: (
             f"Hi {l.first_name},\n\n"
             f"I reached out a few months ago about ScyllaDB as an alternative to DataStax for "
-            f"{l.company_name}'s real-time workloads. Wanted to circle back with something concrete.\n\n"
+            f"{l.company_name}'s real-time workloads. Following up with something concrete.\n\n"
             f"Since then, we published new benchmarks showing ScyllaDB sustaining sub-millisecond p99 "
             f"latency at 2M ops/sec on commodity hardware — the kind of numbers that typically require "
             f"DataStax clusters 3x the size.\n\n"
@@ -121,13 +121,13 @@ SECOND_TOUCH_TEMPLATES: dict[str, dict] = {
             f"One reduced their node count by 60% while improving tail latency. Happy to share the "
             f"case study if useful.\n\n"
             f"Worth a 15-minute catch-up to see if the timing is better now?\n\n"
-            f"— Alex Chen, Solutions Engineer @ ScyllaDB"
+            f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
         ),
     },
     "cost": {
         "linkedin_invite": lambda l: (
-            f"Hi {l.first_name} — following up on my earlier note about {l.company_name}'s DataStax "
-            f"licensing costs. We've since put together a cost model for teams at your scale — "
+            f"Hi {l.first_name} — following up on my earlier note about switching {l.company_name} "
+            f"from DataStax to ScyllaDB. We've since put together a cost model for teams at your scale — "
             f"the numbers are pretty striking. Worth a look?"
         ),
         "email_subject": lambda l: (
@@ -144,14 +144,14 @@ SECOND_TOUCH_TEMPLATES: dict[str, dict] = {
             f"I'd be happy to walk through the model with you. It's a 20-minute conversation and "
             f"you'd leave with a concrete number to bring to your next budget review.\n\n"
             f"Is this worth 20 minutes of your time?\n\n"
-            f"— Alex Chen, Solutions Engineer @ ScyllaDB"
+            f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
         ),
     },
     "lock_in": {
         "linkedin_invite": lambda l: (
             f"Hi {l.first_name} — checking back in after my earlier note on DataStax lock-in risk "
-            f"for {l.company_name}. We've helped a few more teams execute zero-downtime migrations "
-            f"since then. Happy to share what the process looks like now."
+            f"for {l.company_name}. We've since helped more teams migrate to ScyllaDB with zero downtime — "
+            f"happy to share what the process looks like now."
         ),
         "email_subject": lambda l: (
             f"Migration playbook update — relevant to {l.company_name.split()[0]}'s stack"
@@ -168,7 +168,7 @@ SECOND_TOUCH_TEMPLATES: dict[str, dict] = {
             f"straightforward migration candidate. Happy to do a quick compatibility assessment — "
             f"no commitment, just a technical read on what a move would involve.\n\n"
             f"Interested?\n\n"
-            f"— Alex Chen, Solutions Engineer @ ScyllaDB"
+            f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
         ),
     },
     "scalability": {
@@ -191,105 +191,306 @@ SECOND_TOUCH_TEMPLATES: dict[str, dict] = {
             f"Given what {l.company_name} is managing, I think there are a few quick wins in there "
             f"worth talking through — even if you're not actively evaluating alternatives right now.\n\n"
             f"Want me to send the doc over, or set up a 20-minute architecture review?\n\n"
-            f"— Alex Chen, Solutions Engineer @ ScyllaDB"
+            f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
         ),
     },
 }
 
-MOCK_COPY_TEMPLATES: dict[str, dict] = {
-    "latency": {
-        "linkedin_invite": lambda l: (
-            f"Hi {l.first_name} — saw {l.company_name} is running DataStax for real-time workloads. "
-            f"We've seen teams cut p99 latency by 3–5x migrating to ScyllaDB. "
-            f"Happy to share what that looked like. Worth a quick chat?"
-        ),
-        "email_subject": lambda l: (
-            f"How {l.company_name.split()[0]} could shave 4ms off every {l.company_industry.lower()} query"
-        ),
-        "email_body": lambda l: (
-            f"Hi {l.first_name},\n\n"
-            f"Your work at {l.company_name} on {l.company_industry.lower()} infrastructure caught my "
-            f"attention — anyone running DataStax at your scale knows the latency tax that comes with "
-            f"the JVM GC pauses and the enterprise licensing overhead.\n\n"
-            f"ScyllaDB is a drop-in Cassandra replacement (same CQL, same drivers) written in C++ — "
-            f"no GC, no stop-the-world pauses. Teams in similar real-time workloads typically see "
-            f"3–5x lower p99 latency on the same hardware footprint.\n\n"
-            f"Discord moved their message store to ScyllaDB and cut their node count from 177 Cassandra "
-            f"nodes to 72 ScyllaDB nodes while handling higher throughput. Similar story for Grab and Comcast.\n\n"
-            f"Would a 15-minute call make sense to walk through what a migration would look like for "
-            f"{l.company_name}'s stack?\n\n"
-            f"— Alex Chen, Solutions Engineer @ ScyllaDB"
-        ),
-    },
-    "cost": {
-        "linkedin_invite": lambda l: (
-            f"Hi {l.first_name} — {l.company_name}'s DataStax Enterprise footprint must come with a "
-            f"painful renewal conversation every year. ScyllaDB is Apache 2.0 open-source — same "
-            f"Cassandra CQL, no license fees. Worth 15 minutes?"
-        ),
-        "email_subject": lambda l: (
-            f"What {l.company_name.split()[0]} is paying DataStax vs what it could cost"
-        ),
-        "email_body": lambda l: (
-            f"Hi {l.first_name},\n\n"
-            f"DataStax Enterprise licensing costs scale brutally as your data grows — and the value "
-            f"proposition gets murkier once you're past the early adoption phase.\n\n"
-            f"ScyllaDB is Apache 2.0 open-source. No per-node fees, no enterprise license renewals. "
-            f"You get the same Cassandra CQL compatibility, so your existing drivers and tooling keep "
-            f"working. Teams typically cut their database infrastructure spend by 40–60% in the first year.\n\n"
-            f"We've helped several {l.company_industry} companies make this switch without a rewrite — "
-            f"just a rolling migration using ScyllaDB's Cassandra-compatible interface.\n\n"
-            f"I put together a quick cost comparison model for companies at {l.company_name}'s scale "
-            f"(~{l.company_employees} employees). Happy to share it — want me to send it over?\n\n"
-            f"— Alex Chen, Solutions Engineer @ ScyllaDB"
-        ),
-    },
-    "lock_in": {
-        "linkedin_invite": lambda l: (
-            f"Hi {l.first_name} — noticed {l.company_name} is on DataStax. Proprietary APIs are a quiet "
-            f"tax that compounds over time. ScyllaDB is open-source, Cassandra-compatible, and actively "
-            f"developed. Happy to walk through what switching looks like."
-        ),
-        "email_subject": lambda l: (
-            f"Escaping DataStax lock-in without rewriting {l.company_name.split()[0]}'s data layer"
-        ),
-        "email_body": lambda l: (
-            f"Hi {l.first_name},\n\n"
-            f"DataStax has been quietly expanding proprietary APIs — Stargate, Astra's Vector Search, "
-            f"CQL extensions — which makes migration progressively harder over time. It's a well-worn playbook.\n\n"
-            f"ScyllaDB is Apache 2.0 and implements standard CQL with no proprietary extensions you'd be "
-            f"locked into. The migration path from DataStax Enterprise or Astra is well-documented — most "
-            f"teams do it as a rolling replacement with zero downtime.\n\n"
-            f"We recently helped a fintech company migrate 8TB of DataStax data to ScyllaDB in under two "
-            f"weeks. They kept the same Cassandra drivers and application code untouched.\n\n"
-            f"I'm curious — how tied is {l.company_name}'s stack to DataStax-specific features right now?\n\n"
-            f"— Alex Chen, Solutions Engineer @ ScyllaDB"
-        ),
-    },
-    "scalability": {
-        "linkedin_invite": lambda l: (
-            f"Hi {l.first_name} — managing billions of data points at {l.company_name} must put real "
-            f"pressure on your DataStax cluster. ScyllaDB handles that scale on significantly fewer nodes. "
-            f"Happy to compare architectures."
-        ),
-        "email_subject": lambda l: (
-            f"{l.company_name.split()[0]}'s data scale deserves a database built for it"
-        ),
-        "email_body": lambda l: (
-            f"Hi {l.first_name},\n\n"
-            f"At the scale {l.company_name} is operating — {l.company_industry.lower()} workloads typically "
-            f"mean millions of writes per second and billions of records — DataStax clusters tend to get "
-            f"expensive and operationally complex fast.\n\n"
-            f"ScyllaDB's architecture (userspace I/O, shard-per-core design) means it saturates hardware "
-            f"far more efficiently than DataStax's JVM-based stack. Comcast handles 1 million events/sec on "
-            f"a 6-node ScyllaDB cluster that previously required 30 Cassandra nodes.\n\n"
-            f"For IoT and high-throughput data pipelines specifically, we've seen 10x throughput improvements "
-            f"on identical hardware — which translates directly to infrastructure cost and operational headcount.\n\n"
-            f"Would it be useful to do a quick architecture review of your current DataStax setup? "
-            f"Even 30 minutes often surfaces some quick wins.\n\n"
-            f"— Alex Chen, Solutions Engineer @ ScyllaDB"
-        ),
-    },
+NUM_VARIANTS = 3  # number of copy variants generated per lead
+
+# Each pain category has NUM_VARIANTS template dicts.
+# Variant angles: [performance hook, technical detail, proof-point story]
+MOCK_COPY_VARIANTS: dict[str, list[dict]] = {
+    "latency": [
+        {   # V1 — p99 performance hook
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — saw {l.company_name} is running DataStax for real-time workloads. "
+                f"We've seen teams cut p99 latency by 3–5x migrating to ScyllaDB. "
+                f"Happy to share what that looked like. Worth a quick chat?"
+            ),
+            "email_subject": lambda l: (
+                f"How {l.company_name.split()[0]} could shave 4ms off every {l.company_industry.lower()} query"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"Your work at {l.company_name} on {l.company_industry.lower()} infrastructure caught my "
+                f"attention — anyone running DataStax at your scale knows the latency tax that comes with "
+                f"the JVM GC pauses and the enterprise licensing overhead.\n\n"
+                f"ScyllaDB is a drop-in Cassandra replacement (same CQL, same drivers) written in C++ — "
+                f"no GC, no stop-the-world pauses. Teams in similar real-time workloads typically see "
+                f"3–5x lower p99 latency on the same hardware footprint.\n\n"
+                f"Discord moved their message store to ScyllaDB and cut their node count from 177 Cassandra "
+                f"nodes to 72 ScyllaDB nodes while handling higher throughput. Similar story for Grab and Comcast.\n\n"
+                f"Would a 15-minute call make sense to walk through what a migration would look like for "
+                f"{l.company_name}'s stack?\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+        {   # V2 — JVM GC technical angle
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — JVM GC pauses are the hidden latency tax every DataStax team pays. "
+                f"ScyllaDB is C++ with no garbage collector — predictable sub-ms p99 at {l.company_name}'s scale. "
+                f"Curious if GC spikes are a pain point for you."
+            ),
+            "email_subject": lambda l: (
+                f"Eliminating JVM GC-induced latency spikes at {l.company_name.split()[0]}"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"Every DataStax deployment running on the JVM carries the same risk: GC pauses of "
+                f"50–200ms under load, showing up directly in p99 tail latency at the worst possible moment.\n\n"
+                f"ScyllaDB is written in C++ with no garbage collector. Its shard-per-core model keeps "
+                f"latency predictable under full load — teams typically see 3–5x improvement in tail latency "
+                f"moving from DataStax to ScyllaDB on identical hardware.\n\n"
+                f"A fintech company similar to {l.company_name} ran both clusters in parallel for 4 weeks. "
+                f"Their p99 dropped from 18ms to 3ms. Happy to share the technical breakdown.\n\n"
+                f"Worth a 20-minute call to walk through what this looks like for {l.company_name}'s workload?\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+        {   # V3 — Discord proof-point story
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — Discord replaced Cassandra with ScyllaDB and cut their cluster "
+                f"from 177 to 72 nodes while improving latency. Given {l.company_name}'s real-time "
+                f"requirements, the architecture comparison is worth a look."
+            ),
+            "email_subject": lambda l: (
+                f"What Discord's ScyllaDB migration means for {l.company_name.split()[0]}"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"Discord's engineering post about replacing Cassandra with ScyllaDB — 177 nodes to 72, "
+                f"better read latency, higher throughput — is one of the cleaner public migration case "
+                f"studies available. The performance difference comes from architecture: C++ instead of "
+                f"JVM, shard-per-core, no GC.\n\n"
+                f"For {l.company_name}, the math tends to work out similarly. If you're running DataStax "
+                f"for {l.company_industry.lower()} workloads at scale, you're likely over-provisioned "
+                f"relative to what ScyllaDB needs for the same SLA.\n\n"
+                f"The migration path is a rolling node-by-node replacement — same CQL, same drivers, "
+                f"no application rewrites, no bulk data exports.\n\n"
+                f"Happy to do a quick architecture comparison — no commitment, just a technical read.\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+    ],
+    "cost": [
+        {   # V1 — license renewal hook
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — {l.company_name}'s DataStax Enterprise footprint must come with a "
+                f"painful renewal conversation every year. ScyllaDB is Apache 2.0 open-source — same "
+                f"Cassandra CQL, no license fees. Worth 15 minutes?"
+            ),
+            "email_subject": lambda l: (
+                f"What {l.company_name.split()[0]} is paying DataStax vs what it could cost"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"DataStax Enterprise licensing costs scale brutally as your data grows — and the value "
+                f"proposition gets murkier once you're past the early adoption phase.\n\n"
+                f"ScyllaDB is Apache 2.0 open-source. No per-node fees, no enterprise license renewals. "
+                f"You get the same Cassandra CQL compatibility, so your existing drivers and tooling keep "
+                f"working. Teams typically cut their database infrastructure spend by 40–60% in the first year.\n\n"
+                f"We've helped several {l.company_industry} companies make this switch without a rewrite — "
+                f"just a rolling migration using ScyllaDB's Cassandra-compatible interface.\n\n"
+                f"I put together a quick cost comparison model for companies at {l.company_name}'s scale "
+                f"(~{l.company_employees} employees). Happy to share it — want me to send it over?\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+        {   # V2 — node reduction / hardware savings
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — DataStax licensing scales with node count. ScyllaDB is open-source "
+                f"and typically needs 2–3x fewer nodes for the same workload at {l.company_name}. "
+                f"The savings compound quickly."
+            ),
+            "email_subject": lambda l: (
+                f"Running {l.company_name.split()[0]}'s workload on half the nodes"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"Most DataStax deployments are over-provisioned — the JVM overhead means extra headroom "
+                f"to absorb GC pauses and thread contention. ScyllaDB's C++ architecture saturates hardware "
+                f"far more efficiently, typically translating to a 50–70% node reduction.\n\n"
+                f"For {l.company_name} at ~{l.company_employees} employees, that's fewer nodes to patch, "
+                f"monitor, and scale — operational simplicity that compounds over time.\n\n"
+                f"And since ScyllaDB is Apache 2.0 open-source, you drop the per-node licensing cost on "
+                f"top of the hardware savings. Teams in {l.company_industry.lower()} have seen total "
+                f"database spend drop 50–60% in the first renewal cycle.\n\n"
+                f"Would it be useful to run a quick sizing exercise for {l.company_name}'s workload?\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+        {   # V3 — total cost of ownership / OpEx
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — the real cost of DataStax isn't just the license, it's the "
+                f"operational overhead. ScyllaDB's self-tuning architecture reduces DBA time significantly. "
+                f"Relevant for {l.company_name}?"
+            ),
+            "email_subject": lambda l: (
+                f"{l.company_name.split()[0]}'s DataStax total cost — there's a lower floor"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"When teams calculate DataStax costs, they focus on the license fee. But the operational "
+                f"overhead is often bigger: tuning JVM heap settings, managing compaction, handling "
+                f"GC-related incidents, and provisioning headroom for traffic spikes.\n\n"
+                f"ScyllaDB's shard-per-core architecture is largely self-tuning — it adapts to workload "
+                f"changes without manual intervention. Teams that migrate typically report a meaningful "
+                f"reduction in database-related incidents and on-call burden.\n\n"
+                f"Combined with the licensing savings (Apache 2.0 open-source), the total cost reduction "
+                f"for {l.company_name}-scale deployments is usually 50–60% across hardware, licenses, "
+                f"and engineering time.\n\n"
+                f"Happy to walk through a TCO comparison tailored to {l.company_name}'s setup — "
+                f"takes about 20 minutes.\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+    ],
+    "lock_in": [
+        {   # V1 — proprietary API risk
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — noticed {l.company_name} is on DataStax. Proprietary APIs are a "
+                f"quiet tax that compounds over time. ScyllaDB is open-source, Cassandra-compatible, and "
+                f"actively developed. Happy to walk through what switching looks like."
+            ),
+            "email_subject": lambda l: (
+                f"Escaping DataStax lock-in without rewriting {l.company_name.split()[0]}'s data layer"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"DataStax has been quietly expanding proprietary APIs — Stargate, Astra's Vector Search, "
+                f"CQL extensions — which makes migration progressively harder over time.\n\n"
+                f"ScyllaDB is Apache 2.0 and implements standard CQL with no proprietary extensions. "
+                f"The migration path from DataStax Enterprise or Astra is well-documented — most teams "
+                f"do it as a rolling replacement with zero downtime.\n\n"
+                f"We recently helped a fintech company migrate 8TB of DataStax data to ScyllaDB in under "
+                f"two weeks. They kept the same Cassandra drivers and application code untouched.\n\n"
+                f"I'm curious — how tied is {l.company_name}'s stack to DataStax-specific features?\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+        {   # V2 — open-source freedom angle
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — ScyllaDB is Apache 2.0, standard CQL, no proprietary extensions. "
+                f"{l.company_name} could migrate from DataStax with the same application code and drivers. "
+                f"Worth a quick architecture chat?"
+            ),
+            "email_subject": lambda l: (
+                f"Open-source path out of DataStax — no rewrite for {l.company_name.split()[0]}"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"When your database is Apache 2.0 and CQL-compatible, you're never at the mercy of an "
+                f"enterprise vendor's pricing or roadmap decisions.\n\n"
+                f"ScyllaDB is exactly that — fully open-source, Cassandra-wire-compatible, actively "
+                f"developed. No proprietary query language, no special API to untangle later.\n\n"
+                f"For {l.company_name}, the migration is a rolling swap at the driver level — no "
+                f"application rewrites, no new data model. Teams in {l.company_industry.lower()} "
+                f"typically complete the transition in 2–4 weeks.\n\n"
+                f"Happy to share our migration runbook — it answers most of the 'how hard is this "
+                f"really?' questions upfront.\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+        {   # V3 — zero-downtime migration story
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — the main concern teams raise about leaving DataStax is migration "
+                f"risk. ScyllaDB supports zero-downtime rolling migrations from Cassandra. "
+                f"Happy to walk through what that looks like for {l.company_name}."
+            ),
+            "email_subject": lambda l: (
+                f"Zero-downtime DataStax exit — what it looks like for {l.company_name.split()[0]}"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"The most common objection to leaving DataStax isn't cost or performance — it's migration "
+                f"risk. 'We can't afford downtime' is a reasonable concern for production "
+                f"{l.company_industry.lower()} workloads.\n\n"
+                f"ScyllaDB's Cassandra compatibility makes this tractable: ScyllaDB nodes join the existing "
+                f"ring as Cassandra replacements, data streams over via standard replication, and you cut "
+                f"over application traffic incrementally. No bulk exports, no maintenance windows.\n\n"
+                f"We've done this with teams running multi-TB clusters with zero downtime. The trickiest "
+                f"part is usually DataStax-specific CQL extensions — and we have a compatibility checker "
+                f"that flags those upfront.\n\n"
+                f"Want me to run the compatibility check against {l.company_name}'s schema? "
+                f"It takes about 10 minutes.\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+    ],
+    "scalability": [
+        {   # V1 — node count / cluster size
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — managing billions of data points at {l.company_name} must put real "
+                f"pressure on your DataStax cluster. ScyllaDB handles that scale on significantly fewer "
+                f"nodes. Happy to compare architectures."
+            ),
+            "email_subject": lambda l: (
+                f"{l.company_name.split()[0]}'s data scale deserves a database built for it"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"At the scale {l.company_name} is operating — {l.company_industry.lower()} workloads "
+                f"typically mean millions of writes per second and billions of records — DataStax clusters "
+                f"tend to get expensive and operationally complex fast.\n\n"
+                f"ScyllaDB's architecture (userspace I/O, shard-per-core design) saturates hardware far "
+                f"more efficiently than DataStax's JVM-based stack. Comcast handles 1 million events/sec "
+                f"on a 6-node ScyllaDB cluster that previously required 30 Cassandra nodes.\n\n"
+                f"For high-throughput data pipelines specifically, we've seen 10x throughput improvements "
+                f"on identical hardware — translating directly to infrastructure cost savings.\n\n"
+                f"Would it be useful to do a quick architecture review of your current DataStax setup?\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+        {   # V2 — write throughput ceiling
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — at {l.company_name}'s data volume, DataStax clusters start "
+                f"hitting their write throughput ceiling. ScyllaDB sustains millions of writes/sec per "
+                f"node with predictable tail latency. Worth comparing?"
+            ),
+            "email_subject": lambda l: (
+                f"Sustaining {l.company_name.split()[0]}'s write throughput without adding nodes"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"Write-heavy {l.company_industry.lower()} workloads are where DataStax tends to struggle "
+                f"most — the JVM write path isn't designed for sustained high-velocity ingestion without "
+                f"careful heap tuning and frequent compaction management.\n\n"
+                f"ScyllaDB's LSM implementation in C++ handles write-heavy workloads natively: no heap "
+                f"pressure, no GC interference, automatic compaction that doesn't compete with write I/O. "
+                f"Teams at {l.company_name}'s scale typically see 5–10x write throughput improvement on "
+                f"identical hardware.\n\n"
+                f"Grab processes over 1 million writes/sec on ScyllaDB with p99 under 10ms — a workload "
+                f"profile similar to {l.company_industry.lower()} platforms at your scale.\n\n"
+                f"Happy to share the architecture details — would a short call make sense?\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+        {   # V3 — Comcast proof-point story
+            "linkedin_invite": lambda l: (
+                f"Hi {l.first_name} — Comcast runs 1M events/sec on 6 ScyllaDB nodes; the equivalent "
+                f"Cassandra cluster needed 30. For {l.company_name}'s data scale, the hardware math "
+                f"works out similarly. Happy to walk through it."
+            ),
+            "email_subject": lambda l: (
+                f"The Comcast scaling story — applicable to {l.company_name.split()[0]}?"
+            ),
+            "email_body": lambda l: (
+                f"Hi {l.first_name},\n\n"
+                f"Comcast built their xFi gateway telemetry platform on ScyllaDB — 1 million events/sec, "
+                f"6 nodes, sub-10ms p99. The comparable Cassandra deployment needed 30 nodes. The "
+                f"difference is architectural: shard-per-core eliminates coordination overhead that limits "
+                f"Cassandra's per-node throughput.\n\n"
+                f"For {l.company_name} operating at {l.company_industry.lower()} scale, the math tends "
+                f"to work out similarly — fewer nodes, lower cost, better tail latency under peak load. "
+                f"And since ScyllaDB is Apache 2.0 open-source, you drop the DataStax licensing cost too.\n\n"
+                f"The migration is a rolling cluster replacement — same CQL, no application rewrites. "
+                f"Most teams complete it in 2–4 weeks.\n\n"
+                f"Would it be worth doing a quick cluster sizing comparison for {l.company_name}'s workload?\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            ),
+        },
+    ],
 }
 
 
@@ -327,73 +528,134 @@ class CopywriterAgent:
 
     # ── Private helpers ───────────────────────────────────────────────────────
 
-    def _prior_contact_status(self, lead_id: str) -> str:
+    def _prior_contact_status(self, lead_id: str) -> tuple[str, str, str]:
         """
         Check the DB for prior outreach to this lead.
-        Returns "cold", "second_touch", or "skipped".
+        Returns (message_type, status_updated_at, db_status) where message_type is
+        "cold", "second_touch", or "skipped" and db_status is the lead's current DB status.
         """
         if not self.db_path or not self.db_path.exists():
-            return "cold"
+            return "cold", "", ""
         try:
             with sqlite3.connect(self.db_path) as con:
                 row = con.execute(
-                    "SELECT processed_at FROM leads WHERE id = ? ORDER BY processed_at DESC LIMIT 1",
+                    "SELECT processed_at, status_updated_at, status, "
+                    "follow_up_email_subject, follow_up_email_body "
+                    "FROM leads WHERE id = ? ORDER BY processed_at DESC LIMIT 1",
                     (lead_id,),
                 ).fetchone()
         except sqlite3.OperationalError:
-            return "cold"
+            return "cold", "", "", "", ""
 
         if row is None:
-            return "cold"
+            return "cold", "", "", "", ""
 
         last_contact = datetime.fromisoformat(row[0])
         if last_contact.tzinfo is None:
             last_contact = last_contact.replace(tzinfo=timezone.utc)
         age = datetime.now(timezone.utc) - last_contact
+        status_updated_at    = row[1] or ""
+        db_status            = row[2] or ""
+        followup_subject     = row[3] or ""
+        followup_body        = row[4] or ""
         if age.days < self.RECONTACT_AFTER_DAYS:
-            return "skipped"
-        return "second_touch"
+            return "skipped", status_updated_at, db_status, followup_subject, followup_body
+        return "second_touch", status_updated_at, db_status, followup_subject, followup_body
 
     def _write_copy(self, lead: Lead) -> None:
-        status = self._prior_contact_status(lead.id)
-        lead.message_type = status
+        message_type, status_updated_at, db_status, followup_subject, followup_body = \
+            self._prior_contact_status(lead.id)
+        lead.message_type = message_type
 
-        if status == "skipped":
+        if message_type == "skipped":
+            lead.status_updated_at = status_updated_at
+            # Restore persisted status and copy so reporter renders correct badge + content
+            if db_status:
+                lead.status = db_status
+            if followup_subject:
+                lead.follow_up_email_subject = followup_subject
+            if followup_body:
+                lead.follow_up_email_body = followup_body
             self.log.info(
                 f"   ⏭️  Skipping {lead.name} ({lead.company_name}) — contacted less than "
                 f"{self.RECONTACT_AFTER_DAYS} days ago"
             )
             return
 
-        if status == "second_touch":
+        if message_type == "second_touch":
             self.log.info(f"   🔁  [SECOND TOUCH] {lead.name} ({lead.company_name})")
             if self.use_mock:
-                self._write_mock_copy(lead, templates=SECOND_TOUCH_TEMPLATES)
+                variants = self._generate_mock_variants(lead, SECOND_TOUCH_TEMPLATES)
             else:
-                self._write_live_copy(lead, second_touch=True)
+                variants = self._generate_live_variants(lead, second_touch=True)
         else:
+            self.log.info(f"   ✍️  [{'MOCK' if self.use_mock else 'LIVE'}] {lead.name} ({lead.company_name})")
             if self.use_mock:
-                self._write_mock_copy(lead, templates=MOCK_COPY_TEMPLATES)
+                variants = self._generate_mock_variants(lead, MOCK_COPY_VARIANTS)
             else:
-                self._write_live_copy(lead, second_touch=False)
+                variants = self._generate_live_variants(lead, second_touch=False)
 
-    def _write_mock_copy(self, lead: Lead, templates: dict) -> None:
-        self.log.info(f"   ✍️  [MOCK] {lead.name} ({lead.company_name})")
-        cat  = lead.pain_category if lead.pain_category in templates else "latency"
-        tmpl = templates[cat]
-        lead.linkedin_invite          = tmpl["linkedin_invite"](lead)
-        lead.follow_up_email_subject  = tmpl["email_subject"](lead)
-        lead.follow_up_email_body     = tmpl["email_body"](lead)
+        self._apply_variants(lead, variants)
+        self.log.info(f"      {len(variants)} variant(s) generated — QA will select the best")
 
-    def _write_live_copy(self, lead: Lead, second_touch: bool = False) -> None:
-        self.log.info(f"   ✍️  [LIVE] {lead.name} ({lead.company_name})")
+    def _generate_mock_variants(self, lead: Lead, templates: dict) -> list[dict]:
+        """Return a list of copy variant dicts from mock templates.
+
+        templates can be:
+          MOCK_COPY_VARIANTS  — dict[str, list[dict]]  (3 variants per category)
+          SECOND_TOUCH_TEMPLATES — dict[str, dict]     (1 template per category)
+        """
+        cat   = lead.pain_category if lead.pain_category in templates else "latency"
+        value = templates[cat]
+        # Normalise to a list regardless of template structure
+        tmpl_list = value if isinstance(value, list) else [value]
+
+        return [
+            {
+                "linkedin_invite":         t["linkedin_invite"](lead),
+                "follow_up_email_subject": t["email_subject"](lead),
+                "follow_up_email_body":    t["email_body"](lead),
+            }
+            for t in tmpl_list
+        ]
+
+    def _call_claude(self, prompt: str) -> dict:
+        """Single Claude API call; returns parsed copy dict."""
+        response = httpx.post(
+            ANTHROPIC_API_URL,
+            headers={
+                "Content-Type": "application/json",
+                "x-api-key": self.api_key,
+                "anthropic-version": "2023-06-01",
+            },
+            json={
+                "model": CLAUDE_MODEL,
+                "max_tokens": 1000,
+                "system": SYSTEM_PROMPT,
+                "messages": [{"role": "user", "content": prompt}],
+            },
+            timeout=30,
+        )
+        response.raise_for_status()
+        raw = response.json()["content"][0]["text"].strip()
+        raw = re.sub(r"^```json\s*", "", raw)
+        raw = re.sub(r"\s*```$", "", raw)
+        parsed = json.loads(raw)
+        return {
+            "linkedin_invite":         parsed.get("linkedin_invite", ""),
+            "follow_up_email_subject": parsed.get("email_subject", ""),
+            "follow_up_email_body":    parsed.get("email_body", ""),
+        }
+
+    def _generate_live_variants(self, lead: Lead, second_touch: bool = False) -> list[dict]:
+        """Generate NUM_VARIANTS copy variants via the Claude API."""
         second_touch_note = (
             "\n\nIMPORTANT: This is a SECOND TOUCH — the lead was contacted 6+ months ago. "
             "Acknowledge the prior outreach briefly, offer something new (a benchmark, case study, "
             "or updated insight), and keep the tone warmer and less cold-intro."
             if second_touch else ""
         )
-        prompt = USER_PROMPT_TEMPLATE.format(
+        base_prompt = USER_PROMPT_TEMPLATE.format(
             name=lead.name,
             title=lead.title,
             company_name=lead.company_name,
@@ -404,34 +666,33 @@ class CopywriterAgent:
             pain_angle=lead.pain_angle,
             linkedin_url=lead.linkedin_url,
         ) + second_touch_note
-        try:
-            response = httpx.post(
-                ANTHROPIC_API_URL,
-                headers={
-                    "Content-Type": "application/json",
-                    "x-api-key": self.api_key,
-                    "anthropic-version": "2023-06-01",
-                },
-                json={
-                    "model": CLAUDE_MODEL,
-                    "max_tokens": 1000,
-                    "system": SYSTEM_PROMPT,
-                    "messages": [{"role": "user", "content": prompt}],
-                },
-                timeout=30,
-            )
-            response.raise_for_status()
-            raw = response.json()["content"][0]["text"].strip()
-            raw = re.sub(r"^```json\s*", "", raw)
-            raw = re.sub(r"\s*```$", "", raw)
-            parsed = json.loads(raw)
 
-            lead.linkedin_invite         = parsed.get("linkedin_invite", "")
-            lead.follow_up_email_subject = parsed.get("email_subject", "")
-            lead.follow_up_email_body    = parsed.get("email_body", "")
+        angle_hints = [
+            "",
+            "\n\nFor this variant, lead with a specific technical detail (e.g. GC pauses, node count, "
+            "or write throughput) rather than a general pitch.",
+            "\n\nFor this variant, open with a concrete customer proof point (Discord, Comcast, or Grab) "
+            "and frame everything around that story.",
+        ]
 
-        except Exception as exc:
-            self.log.error(f"   ❌ Copy generation failed for {lead.name}: {exc}")
-            lead.linkedin_invite         = "[GENERATION FAILED]"
-            lead.follow_up_email_subject = "[GENERATION FAILED]"
-            lead.follow_up_email_body    = str(exc)
+        variants: list[dict] = []
+        for i in range(NUM_VARIANTS):
+            try:
+                variant = self._call_claude(base_prompt + angle_hints[i % len(angle_hints)])
+                variants.append(variant)
+            except Exception as exc:
+                self.log.warning(f"   ⚠️  Variant {i + 1} generation failed for {lead.name}: {exc}")
+                if not variants:
+                    variants.append({
+                        "linkedin_invite":         "[GENERATION FAILED]",
+                        "follow_up_email_subject": "[GENERATION FAILED]",
+                        "follow_up_email_body":    str(exc),
+                    })
+        return variants
+
+    def _apply_variants(self, lead: Lead, variants: list[dict]) -> None:
+        """Store variants on the lead and set copy fields from variant 1 as default."""
+        lead.copy_variants           = variants
+        lead.linkedin_invite         = variants[0]["linkedin_invite"]
+        lead.follow_up_email_subject = variants[0]["follow_up_email_subject"]
+        lead.follow_up_email_body    = variants[0]["follow_up_email_body"]
