@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python main.py)",
+      "Bash(python -c \"import json; data=json.load\\(open\\('apollo_mock_data.json'\\)\\); print\\([p.get\\('organization',{}\\).get\\('name',''\\) for p in data['people']]\\)\")",
+      "Bash(python -c \"import json; data=json.load\\(open\\('apollo_mock_data.json'\\)\\); print\\(list\\(data.keys\\(\\)\\)\\)\")",
+      "Bash(python main.py --help)",
+      "Bash(python -c ' *)"
+    ]
+  }
+}
