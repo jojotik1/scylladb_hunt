@@ -22,7 +22,9 @@
       "Bash(rm -f data/output/reports/report_2026042*.html data/output/outreach/*.json)",
       "Bash(python -c \"import sqlite3; con=sqlite3.connect\\('data/DB/scylladb_hunter.db'\\); print\\('leads:', con.execute\\('SELECT COUNT\\(*\\) FROM leads'\\).fetchone\\(\\)[0]\\); print\\('runs:', con.execute\\('SELECT COUNT\\(*\\) FROM runs'\\).fetchone\\(\\)[0]\\); print\\(con.execute\\('SELECT name,status,status_updated_at FROM leads'\\).fetchall\\(\\)\\)\")",
       "Bash(python follow_up.py --help)",
-      "Bash(python *)"
+      "Bash(python *)",
+      "Bash(git remote *)",
+      "Bash(git push *)"
     ]
   }
 }
