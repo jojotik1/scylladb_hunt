@@ -1,7 +1,7 @@
 """
 main.py
 -------
-CLI entrypoint for the ScyllaDB GTM Hunter.
+CLI entrypoint for the GTM Hunter.
 
 This file does exactly two things:
   1. Parse CLI arguments.
@@ -59,7 +59,7 @@ def run_pipeline(output_dir: str = "data", api_key: str = "", apollo_key: str = 
     """
     sep = "═" * 60
     print(f"\n{sep}")
-    print("  🦑  ScyllaDB GTM Hunter — 5-Stage Multi-Agent Pipeline")
+    print("  🦑  GTM Hunter — 5-Stage Multi-Agent Pipeline")
     print(f"{sep}\n")
 
     # Apollo client — live if a key is provided, mock otherwise
@@ -112,15 +112,15 @@ def run_pipeline(output_dir: str = "data", api_key: str = "", apollo_key: str = 
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        prog="scylladb-hunter",
-        description="ScyllaDB GTM Hunter — automated DataStax competitor displacement pipeline",
+        prog="gtm-hunter",
+        description="GTM Hunter — automated Competitor displacement pipeline",
     )
     parser.add_argument(
         "--output-dir",
         default="data",
         metavar="DIR",
         help="Base output directory (default: data/). "
-             "DB → <DIR>/DB/scylladb_hunter.db | "
+             "DB → <DIR>/DB/gtm_hunter.db | "
              "Reports → <DIR>/output/reports/ | "
              "Outreach → <DIR>/output/outreach/",
     )

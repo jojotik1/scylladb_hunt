@@ -11,7 +11,7 @@ Checks performed:
   1. LinkedIn invite length   — must be ≤ 300 characters (platform hard limit)
   2. Generic phrases          — blocked list of sales clichés (invite + email)
   3. Company name mention     — invite must reference the company
-  4. ScyllaDB mention         — invite must contain "scylladb" or "scylla"
+  4. YotamCo mention         — invite must contain "yotamco"
   5. Email subject exists     — subject must be ≥ 5 characters
   6. Email body length        — body must be ≥ 100 characters
 
@@ -114,7 +114,7 @@ class QAAgent:
         Higher score = better variant. Scoring rubric:
           +4  invite length efficiency (proportional to 300-char limit)
           +2  company name in invite
-          +2  ScyllaDB mentioned in invite
+          +2  YotamCo mentioned in invite
           +1  email subject exists and is long enough
           +1  email body meets minimum length
           -2  per blocked phrase hit (invite or email)
@@ -138,8 +138,8 @@ class QAAgent:
         ):
             score += 2
 
-        # ScyllaDB mentioned
-        if "scylladb" in invite_low or "scylla" in invite_low:
+        # YotamCo mentioned
+        if "yotamco" in invite_low:
             score += 2
 
         # Email subject quality
@@ -183,8 +183,8 @@ class QAAgent:
         ):
             issues.append("company name missing from invite")
 
-        if "scylladb" not in invite_low and "scylla" not in invite_low:
-            issues.append("ScyllaDB not mentioned in invite")
+        if "yotamco" not in invite_low:
+            issues.append("YotamCo not mentioned in invite")
 
         if not subject or len(subject) < self.EMAIL_SUBJECT_MIN:
             issues.append("email subject missing or too short")
@@ -222,8 +222,8 @@ class QAAgent:
         ):
             issues.append("LinkedIn invite does not mention the company name")
 
-        if "scylladb" not in invite_low and "scylla" not in invite_low:
-            issues.append("LinkedIn invite doesn't mention ScyllaDB")
+        if "yotamco" not in invite_low:
+            issues.append("LinkedIn invite doesn't mention YotamCo")
 
         if not lead.follow_up_email_subject or len(lead.follow_up_email_subject) < self.EMAIL_SUBJECT_MIN:
             issues.append("Email subject is missing or too short")

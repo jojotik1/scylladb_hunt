@@ -1,7 +1,7 @@
 """
 inspect_db.py
 -------------
-Prints metadata and all rows for every table in scylladb_hunter.db.
+Prints metadata and all rows for every table in gtm_hunter.db.
 Run from any directory:
     python data/DB/inspect_db.py
 """
@@ -13,7 +13,7 @@ from pathlib import Path
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-DB_PATH = Path(__file__).parent / "scylladb_hunter.db"
+DB_PATH = Path(__file__).parent / "gtm_hunter.db"
 
 
 def hr(char="-", width=80):

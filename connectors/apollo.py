@@ -1,5 +1,5 @@
 """
-Apollo API Connector — ScyllaDB GTM Hunter
+Apollo API Connector — GTM Hunter
 ==========================================
 Wraps the four Apollo endpoints needed for the hunter workflow.
 Supports LIVE mode (real API key) and MOCK mode (offline, no credits consumed).
@@ -103,7 +103,7 @@ DEFAULT_INDUSTRIES = [
 
 DEFAULT_EMPLOYEE_RANGES = ["201,500", "501,1000", "1001,5000"]
 
-DEFAULT_TECHNOLOGIES = ["DataStax", "Apache Cassandra", "Cassandra"]
+DEFAULT_TECHNOLOGIES = ["Competitor", "Competitor", "Competitor"]
 
 
 # ─── Reachability ─────────────────────────────────────────────────────────────
@@ -253,7 +253,7 @@ class ApolloClient:
     # 1. Company Search
     #    POST /api/v1/mixed_companies/search
     #
-    #    Strategy: search for companies in industries known for DataStax/Cassandra
+    #    Strategy: search for companies in industries known for Competitor
     #    workloads. Filter by size and optionally by detected technology stack.
     # ──────────────────────────────────────────────────────────────────────────
 
@@ -268,13 +268,13 @@ class ApolloClient:
         per_page: int = 10,
     ) -> dict:
         """
-        Search for companies likely using DataStax.
+        Search for companies likely using Competitor.
 
         Args:
             industries:      Industry verticals to target.
             employee_ranges: Apollo employee range strings, e.g. ["201,500"].
             technologies:    Technology names to filter by (technographic signal).
-            keywords:        Free-text keywords (e.g. ["real-time", "cassandra"]).
+            keywords:        Free-text keywords (e.g. ["real-time", "competitor"]).
             locations:       Company HQ locations, e.g. ["California, US"].
             page:            Page number (default 1).
             per_page:        Results per page, max 100 (default 10).
@@ -310,7 +310,7 @@ class ApolloClient:
     # 2. Organization Bulk Enrich
     #    POST /api/v1/organizations/bulk_enrich
     #
-    #    Strategy: confirm DataStax usage + get full technographic profiles,
+    #    Strategy: confirm Competitor usage + get full technographic profiles,
     #    funding info, and departmental headcount.
     # ──────────────────────────────────────────────────────────────────────────
 
@@ -475,13 +475,13 @@ class ApolloClient:
         """
         Run the full GTM hunter pipeline end-to-end:
 
-        1. Find companies likely using DataStax (free)
+        1. Find companies likely using Competitor (free)
         2. Enrich companies to confirm tech stack (free)
         3. Search for decision-makers within qualified companies (free)
         4. Enrich selected leads to get LinkedIn URLs + emails (credit-consuming)
 
         Args:
-            min_signal_score:    Minimum datastax_signal_score to qualify a company (0–100).
+            min_signal_score:    Minimum competitor_signal_score to qualify a company (0–100).
             max_leads_to_enrich: Max people to enrich with credits.
 
         Returns:
@@ -490,11 +490,11 @@ class ApolloClient:
         """
         sep = "═" * 50
         logger.info(sep)
-        logger.info(" ScyllaDB GTM Hunter — Full Pipeline Starting")
+        logger.info(" GTM Hunter — Full Pipeline Starting")
         logger.info(sep)
 
         # Step 1: Company Discovery
-        logger.info("STEP 1/4 — Searching for DataStax-adjacent companies...")
+        logger.info("STEP 1/4 — Searching for Competitor-adjacent companies...")
         company_results = self.search_companies()
         companies = company_results.get("organizations", [])
         logger.info(f"  Found {len(companies)} candidate companies")
@@ -505,7 +505,7 @@ class ApolloClient:
         enriched_result = self.bulk_enrich_organizations(enrich_input)
         enriched_companies = enriched_result.get("organizations", [])
 
-        qualified = [c for c in companies if c.get("datastax_signal_score", 0) >= min_signal_score]
+        qualified = [c for c in companies if c.get("competitor_signal_score", 0) >= min_signal_score]
         logger.info(
             f"  {len(qualified)}/{len(companies)} companies passed "
             f"signal score threshold (≥{min_signal_score})"

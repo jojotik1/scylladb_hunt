@@ -1,7 +1,7 @@
 """
 utils/logging.py
 ----------------
-Centralised logging configuration for the ScyllaDB GTM Hunter.
+Centralised logging configuration for the GTM Hunter.
 Import make_logger from here — never configure logging in individual modules.
 """
 

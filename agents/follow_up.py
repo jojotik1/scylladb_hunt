@@ -199,7 +199,7 @@ if __name__ == "__main__":
         parser = argparse.ArgumentParser(
             prog="follow-up",
             description=(
-                "ScyllaDB GTM Hunter — Follow-up email dispatcher. "
+                "GTM Hunter — Follow-up email dispatcher. "
                 f"Sends emails to leads with status '{TRIGGER_STATUS}' "
                 f"that have not responded after {FOLLOW_UP_DELAY_DAYS} days."
             ),
@@ -216,11 +216,11 @@ if __name__ == "__main__":
     args = _parse_args()
 
     output_dir = args.output_dir
-    db_path    = str(Path(output_dir) / "DB" / "scylladb_hunter.db")
+    db_path    = str(Path(output_dir) / "DB" / "gtm_hunter.db")
 
     sep = "═" * 60
     print(f"\n{sep}")
-    print("  ScyllaDB GTM Hunter — Follow-Up Email Dispatcher")
+    print("  GTM Hunter — Follow-Up Email Dispatcher")
     print(f"  Trigger status : '{TRIGGER_STATUS}'")
     print(f"  Delay threshold: {FOLLOW_UP_DELAY_DAYS} days")
     print(f"  DB             : {db_path}")

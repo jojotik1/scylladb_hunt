@@ -22,8 +22,8 @@ PAIN_KEYWORDS: dict[str, list[str]] = {
                     "leaderboard", "live", "streaming"],
     "cost":        ["cost", "overhead", "budget", "spend", "pricing",
                     "license", "enterprise fee"],
-    "lock_in":     ["datastax", "proprietary", "vendor", "migration",
-                    "open-source", "cassandra"],
+    "lock_in":     ["competitor", "proprietary", "vendor", "migration",
+                    "open-source", "legacy"],
     "scalability": ["scale", "billion", "sensor", "iot", "massive",
                     "throughput", "volume", "high-velocity"],
 }
@@ -50,7 +50,7 @@ class Lead:
     company_employees: int
     company_technologies: list[str]
     company_description: str
-    company_signal_score: int   # DataStax signal score from Apollo (0-100)
+    company_signal_score: int   # Competitor signal score from Apollo (0-100)
 
     # ── Qualification (set by QualifierAgent) ─────────────────────────────────
     apollo_reachable: bool = True   # False when Apollo had no email/phone at search time

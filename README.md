@@ -1,8 +1,8 @@
-# ScyllaDB GTM Hunter
+# GTM Hunter
 
-**Home Assignment — GTM Engineer @ ScyllaDB**
+**Home Assignment — GTM Engineer @ YotamCo**
 
-Automated competitor displacement pipeline: find DataStax users → qualify leads → generate personalised outreach → QA → trigger → follow up → report.
+Automated competitor displacement pipeline: find Competitor users → qualify leads → generate personalised outreach → QA → trigger → follow up → report.
 
 ---
 
@@ -75,7 +75,7 @@ Agent 7 — ReporterAgent      SQLite persistence + interactive self-contained H
 ## Project Structure
 
 ```
-scylladb/
+yotamco/
 ├── main.py                      ← Step 1: full pipeline (find → qualify → copy → QA → send → report)
 ├── requirements.txt
 │
@@ -101,7 +101,7 @@ scylladb/
     ├── mock_data_source/
     │   └── apollo_mock_data.json        ← Offline mock data (10 companies, 10 leads)
     ├── DB/
-    │   ├── scylladb_hunter.db           ← SQLite database (pre-seeded with Megan Chambers)
+    │   ├── gtm_hunter.db           ← SQLite database (pre-seeded with Megan Chambers)
     │   └── inspect_db.py               ← Prints DB schema + all rows for every table
     └── output/
         ├── reports/
@@ -182,7 +182,7 @@ python agents/follow_up.py --output-dir ./results
 
 | File | Produced by | Contents |
 |---|---|---|
-| `data/DB/scylladb_hunter.db` | Both steps | SQLite — all leads across all runs, status never downgraded |
+| `data/DB/gtm_hunter.db` | Both steps | SQLite — all leads across all runs, status never downgraded |
 | `data/output/reports/report_<ts>.html` | `main.py` | Self-contained dark-theme HTML report |
 | `data/output/outreach/outreach_<run_id>.json` | `main.py` | LinkedIn invite dry-run log |
 | `data/output/outreach/followup_<ts>.json` | `agents/follow_up.py` | Follow-up email dry-run log |
@@ -198,7 +198,7 @@ Calls Apollo's `run_full_pipeline()`, which classifies every person by reachabil
 |---|---|
 | `latency` | real-time, millisecond, latency, fast, instant, leaderboard, live, streaming |
 | `cost` | cost, overhead, budget, spend, pricing, license, enterprise fee |
-| `lock_in` | datastax, proprietary, vendor, migration, open-source, cassandra |
+| `lock_in` | competitor, proprietary, vendor, migration, open-source, competitor |
 | `scalability` | scale, billion, sensor, iot, massive, throughput, volume, high-velocity |
 
 ### Agent 2 — QualifierAgent
@@ -211,12 +211,12 @@ Calls Apollo's `run_full_pipeline()`, which classifies every person by reachabil
 |---|---|
 | Seniority (CTO=6, VP=5, Head/Director=4–5, Principal/Staff/Manager=3, Senior=1) | 0–6 |
 | Company size (50→1, 200→2, 500→3, 1000+→4) | 0–4 |
-| DataStax signal score (÷25, max 4) | 0–4 |
+| Competitor signal score (÷25, max 4) | 0–4 |
 | Email verified (+3) / guessed (+1) | 0–3 |
 | LinkedIn URL present | 0–2 |
-| DataStax/Cassandra tech detected | 0–1 |
+| Competitor tech detected | 0–1 |
 
-**Hard disqualifiers:** titles containing `intern`, `junior`, `jr.`, `associate engineer`, `entry`; companies matching `datastax`, `astra db`, `apache cassandra project`.
+**Hard disqualifiers:** titles containing `intern`, `junior`, `jr.`, `associate engineer`, `entry`; companies matching `competitor`, `astra db`, `competitor project`.
 
 **Pass threshold:** ≥ 12 points.
 
@@ -236,7 +236,7 @@ Also checks the DB before writing copy:
 
 Pure Python — no LLM. Scores all 3 variants from Agent 3 and selects the best one, then runs the final quality gate on the winner.
 
-**Variant selection:** each variant is scored on a deterministic rubric — invite content density (up to 4 pts), company name present (+2), ScyllaDB mentioned (+2), subject and body length (+1 each), minus 2 pts per blocked phrase hit. The variant with the fewest issues wins; score breaks ties. The selected variant number is shown in the HTML report (`QA: variant N/3`).
+**Variant selection:** each variant is scored on a deterministic rubric — invite content density (up to 4 pts), company name present (+2), YotamCo mentioned (+2), subject and body length (+1 each), minus 2 pts per blocked phrase hit. The variant with the fewest issues wins; score breaks ties. The selected variant number is shown in the HTML report (`QA: variant N/3`).
 
 **Quality gate** — the selected variant passes only if all checks pass:
 
@@ -245,7 +245,7 @@ Pure Python — no LLM. Scores all 3 variants from Agent 3 and selects the best 
 | LinkedIn invite length | ≤ 300 characters |
 | Generic phrases | Blocked in both invite and email body |
 | Company name | Must appear in the LinkedIn invite |
-| ScyllaDB mention | Invite must contain "scylladb" or "scylla" |
+| YotamCo mention | Invite must contain "yotamco" |
 | Email subject | ≥ 5 characters |
 | Email body | ≥ 100 characters |
 

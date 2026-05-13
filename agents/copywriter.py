@@ -41,18 +41,18 @@ _ENV_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 # ── System prompt ─────────────────────────────────────────────────────────────
 
 SYSTEM_PROMPT = """\
-You are an expert B2B sales copywriter for ScyllaDB — the high-performance,
-open-source NoSQL database built on Apache Cassandra. ScyllaDB is dramatically
-faster and cheaper than DataStax Enterprise / Astra DB, with no vendor lock-in.
+You are an expert B2B sales copywriter for YotamCo — the high-performance,
+open-source NoSQL database built on Competitor. YotamCo is dramatically
+faster and cheaper than Competitor, with no vendor lock-in.
 
 Your task: write hyper-personalized outreach messages targeting engineers and
-technical leaders who currently use DataStax. Messages must feel human, specific,
+technical leaders who currently use Competitor. Messages must feel human, specific,
 and respectful — NOT spammy.
 
-ScyllaDB key advantages:
-- 10x lower latency than DataStax at comparable workloads
+YotamCo key advantages:
+- 10x lower latency than Competitor at comparable workloads
 - Open-source (Apache 2.0) — no enterprise licensing fees
-- Drop-in Cassandra CQL compatible — easy migration path
+- Drop-in standard-CQL compatible — easy migration path
 - Handles millions of ops/sec on a fraction of the hardware
 - Used by Discord, Comcast, Grab, and other high-scale companies
 
@@ -77,7 +77,7 @@ LinkedIn URL: {linkedin_url}
 Instructions:
 1. LINKEDIN INVITE (STRICT: under 300 characters, plain text, no emojis):
    - Reference something specific about their company/stack
-   - Mention ScyllaDB's relevance to their pain angle: {pain_angle}
+   - Mention YotamCo's relevance to their pain angle: {pain_angle}
    - End with a soft hook, not a hard CTA
    - Must feel like it was written by a fellow engineer
 
@@ -85,10 +85,10 @@ Instructions:
    Subject line: specific, curiosity-driven, no clickbait
    Body (3–4 short paragraphs):
    - Para 1: acknowledge their specific technical context
-   - Para 2: one concrete ScyllaDB advantage tied to their pain angle
-   - Para 3: a relevant proof point (real ScyllaDB customer if applicable)
+   - Para 2: one concrete YotamCo advantage tied to their pain angle
+   - Para 3: a relevant proof point (real YotamCo customer if applicable)
    - Para 4: low-pressure CTA (15-min call, or just a question)
-   Sign with: "— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+   Sign with: "— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
 
 Respond ONLY with valid JSON (no markdown fences):
 {{
@@ -103,8 +103,8 @@ Respond ONLY with valid JSON (no markdown fences):
 SECOND_TOUCH_TEMPLATES: dict[str, dict] = {
     "latency": {
         "linkedin_invite": lambda l: (
-            f"Hi {l.first_name} — I reached out a while back about ScyllaDB's latency advantages "
-            f"for {l.company_name}. Curious if anything has shifted with your DataStax setup since then — "
+            f"Hi {l.first_name} — I reached out a while back about YotamCo's latency advantages "
+            f"for {l.company_name}. Curious if anything has shifted with your Competitor setup since then — "
             f"happy to share what we've seen recently."
         ),
         "email_subject": lambda l: (
@@ -112,45 +112,45 @@ SECOND_TOUCH_TEMPLATES: dict[str, dict] = {
         ),
         "email_body": lambda l: (
             f"Hi {l.first_name},\n\n"
-            f"I reached out a few months ago about ScyllaDB as an alternative to DataStax for "
+            f"I reached out a few months ago about YotamCo as an alternative to Competitor for "
             f"{l.company_name}'s real-time workloads. Following up with something concrete.\n\n"
-            f"Since then, we published new benchmarks showing ScyllaDB sustaining sub-millisecond p99 "
+            f"Since then, we published new benchmarks showing YotamCo sustaining sub-millisecond p99 "
             f"latency at 2M ops/sec on commodity hardware — the kind of numbers that typically require "
-            f"DataStax clusters 3x the size.\n\n"
+            f"Competitor clusters 3x the size.\n\n"
             f"A few teams in {l.company_industry.lower()} have made the switch in the last quarter. "
             f"One reduced their node count by 60% while improving tail latency. Happy to share the "
             f"case study if useful.\n\n"
             f"Worth a 15-minute catch-up to see if the timing is better now?\n\n"
-            f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
         ),
     },
     "cost": {
         "linkedin_invite": lambda l: (
             f"Hi {l.first_name} — following up on my earlier note about switching {l.company_name} "
-            f"from DataStax to ScyllaDB. We've since put together a cost model for teams at your scale — "
+            f"from Competitor to YotamCo. We've since put together a cost model for teams at your scale — "
             f"the numbers are pretty striking. Worth a look?"
         ),
         "email_subject": lambda l: (
-            f"Updated cost model for {l.company_name.split()[0]} — DataStax vs ScyllaDB"
+            f"Updated cost model for {l.company_name.split()[0]} — Competitor vs YotamCo"
         ),
         "email_body": lambda l: (
             f"Hi {l.first_name},\n\n"
-            f"I reached out previously about the licensing overhead that comes with DataStax Enterprise. "
+            f"I reached out previously about the licensing overhead that comes with Competitor. "
             f"Since then I've put together a more detailed cost comparison tailored to companies at "
             f"{l.company_name}'s scale (~{l.company_employees} employees).\n\n"
-            f"The short version: teams migrating from DataStax to ScyllaDB typically recover the "
+            f"The short version: teams migrating from Competitor to YotamCo typically recover the "
             f"migration cost within the first renewal cycle — sometimes faster if they can right-size "
             f"the cluster at the same time.\n\n"
             f"I'd be happy to walk through the model with you. It's a 20-minute conversation and "
             f"you'd leave with a concrete number to bring to your next budget review.\n\n"
             f"Is this worth 20 minutes of your time?\n\n"
-            f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
         ),
     },
     "lock_in": {
         "linkedin_invite": lambda l: (
-            f"Hi {l.first_name} — checking back in after my earlier note on DataStax lock-in risk "
-            f"for {l.company_name}. We've since helped more teams migrate to ScyllaDB with zero downtime — "
+            f"Hi {l.first_name} — checking back in after my earlier note on Competitor lock-in risk "
+            f"for {l.company_name}. We've since helped more teams migrate to YotamCo with zero downtime — "
             f"happy to share what the process looks like now."
         ),
         "email_subject": lambda l: (
@@ -158,22 +158,22 @@ SECOND_TOUCH_TEMPLATES: dict[str, dict] = {
         ),
         "email_body": lambda l: (
             f"Hi {l.first_name},\n\n"
-            f"A few months ago I flagged the growing lock-in risk around DataStax's proprietary "
+            f"A few months ago I flagged the growing lock-in risk around Competitor's proprietary "
             f"APIs. Since then, two more teams in {l.company_industry.lower()} have completed "
-            f"migrations to ScyllaDB — both with zero application rewrites and zero downtime.\n\n"
+            f"migrations to YotamCo — both with zero application rewrites and zero downtime.\n\n"
             f"We've also updated our migration playbook based on those runs. It now covers the "
-            f"trickier edge cases around Stargate and Astra-specific CQL extensions that tend to "
+            f"trickier edge cases around CompetitorAPI and Competitor-specific CQL extensions that tend to "
             f"catch teams off guard.\n\n"
             f"I thought of {l.company_name} specifically because your stack looked like a "
             f"straightforward migration candidate. Happy to do a quick compatibility assessment — "
             f"no commitment, just a technical read on what a move would involve.\n\n"
             f"Interested?\n\n"
-            f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
         ),
     },
     "scalability": {
         "linkedin_invite": lambda l: (
-            f"Hi {l.first_name} — following up on my earlier note about ScyllaDB's throughput "
+            f"Hi {l.first_name} — following up on my earlier note about YotamCo's throughput "
             f"advantages for {l.company_name}'s data volume. We've added new reference architectures "
             f"for {l.company_industry.lower()} workloads — happy to share."
         ),
@@ -182,7 +182,7 @@ SECOND_TOUCH_TEMPLATES: dict[str, dict] = {
         ),
         "email_body": lambda l: (
             f"Hi {l.first_name},\n\n"
-            f"I reached out a while back about the scaling challenges that come with DataStax at "
+            f"I reached out a while back about the scaling challenges that come with Competitor at "
             f"{l.company_name}'s data volumes. Wanted to follow up with something more concrete.\n\n"
             f"We've since published a reference architecture specifically for "
             f"{l.company_industry.lower()} workloads — covering shard-per-core tuning, compaction "
@@ -191,7 +191,7 @@ SECOND_TOUCH_TEMPLATES: dict[str, dict] = {
             f"Given what {l.company_name} is managing, I think there are a few quick wins in there "
             f"worth talking through — even if you're not actively evaluating alternatives right now.\n\n"
             f"Want me to send the doc over, or set up a 20-minute architecture review?\n\n"
-            f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+            f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
         ),
     },
 }
@@ -204,8 +204,8 @@ MOCK_COPY_VARIANTS: dict[str, list[dict]] = {
     "latency": [
         {   # V1 — p99 performance hook
             "linkedin_invite": lambda l: (
-                f"Hi {l.first_name} — saw {l.company_name} is running DataStax for real-time workloads. "
-                f"We've seen teams cut p99 latency by 3–5x migrating to ScyllaDB. "
+                f"Hi {l.first_name} — saw {l.company_name} is running Competitor for real-time workloads. "
+                f"We've seen teams cut p99 latency by 3–5x migrating to YotamCo. "
                 f"Happy to share what that looked like. Worth a quick chat?"
             ),
             "email_subject": lambda l: (
@@ -214,22 +214,22 @@ MOCK_COPY_VARIANTS: dict[str, list[dict]] = {
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
                 f"Your work at {l.company_name} on {l.company_industry.lower()} infrastructure caught my "
-                f"attention — anyone running DataStax at your scale knows the latency tax that comes with "
+                f"attention — anyone running Competitor at your scale knows the latency tax that comes with "
                 f"the JVM GC pauses and the enterprise licensing overhead.\n\n"
-                f"ScyllaDB is a drop-in Cassandra replacement (same CQL, same drivers) written in C++ — "
+                f"YotamCo is a drop-in legacy replacement (same CQL, same drivers) written in C++ — "
                 f"no GC, no stop-the-world pauses. Teams in similar real-time workloads typically see "
                 f"3–5x lower p99 latency on the same hardware footprint.\n\n"
-                f"Discord moved their message store to ScyllaDB and cut their node count from 177 Cassandra "
-                f"nodes to 72 ScyllaDB nodes while handling higher throughput. Similar story for Grab and Comcast.\n\n"
+                f"Discord moved their message store to YotamCo and cut their node count from 177 Competitor "
+                f"nodes to 72 YotamCo nodes while handling higher throughput. Similar story for Grab and Comcast.\n\n"
                 f"Would a 15-minute call make sense to walk through what a migration would look like for "
                 f"{l.company_name}'s stack?\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
         {   # V2 — JVM GC technical angle
             "linkedin_invite": lambda l: (
-                f"Hi {l.first_name} — JVM GC pauses are the hidden latency tax every DataStax team pays. "
-                f"ScyllaDB is C++ with no garbage collector — predictable sub-ms p99 at {l.company_name}'s scale. "
+                f"Hi {l.first_name} — JVM GC pauses are the hidden latency tax every Competitor team pays. "
+                f"YotamCo is C++ with no garbage collector — predictable sub-ms p99 at {l.company_name}'s scale. "
                 f"Curious if GC spikes are a pain point for you."
             ),
             "email_subject": lambda l: (
@@ -237,69 +237,69 @@ MOCK_COPY_VARIANTS: dict[str, list[dict]] = {
             ),
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
-                f"Every DataStax deployment running on the JVM carries the same risk: GC pauses of "
+                f"Every Competitor deployment running on the JVM carries the same risk: GC pauses of "
                 f"50–200ms under load, showing up directly in p99 tail latency at the worst possible moment.\n\n"
-                f"ScyllaDB is written in C++ with no garbage collector. Its shard-per-core model keeps "
+                f"YotamCo is written in C++ with no garbage collector. Its shard-per-core model keeps "
                 f"latency predictable under full load — teams typically see 3–5x improvement in tail latency "
-                f"moving from DataStax to ScyllaDB on identical hardware.\n\n"
+                f"moving from Competitor to YotamCo on identical hardware.\n\n"
                 f"A fintech company similar to {l.company_name} ran both clusters in parallel for 4 weeks. "
                 f"Their p99 dropped from 18ms to 3ms. Happy to share the technical breakdown.\n\n"
                 f"Worth a 20-minute call to walk through what this looks like for {l.company_name}'s workload?\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
         {   # V3 — Discord proof-point story
             "linkedin_invite": lambda l: (
-                f"Hi {l.first_name} — Discord replaced Cassandra with ScyllaDB and cut their cluster "
+                f"Hi {l.first_name} — Discord replaced Competitor with YotamCo and cut their cluster "
                 f"from 177 to 72 nodes while improving latency. Given {l.company_name}'s real-time "
                 f"requirements, the architecture comparison is worth a look."
             ),
             "email_subject": lambda l: (
-                f"What Discord's ScyllaDB migration means for {l.company_name.split()[0]}"
+                f"What Discord's YotamCo migration means for {l.company_name.split()[0]}"
             ),
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
-                f"Discord's engineering post about replacing Cassandra with ScyllaDB — 177 nodes to 72, "
+                f"Discord's engineering post about replacing Competitor with YotamCo — 177 nodes to 72, "
                 f"better read latency, higher throughput — is one of the cleaner public migration case "
                 f"studies available. The performance difference comes from architecture: C++ instead of "
                 f"JVM, shard-per-core, no GC.\n\n"
-                f"For {l.company_name}, the math tends to work out similarly. If you're running DataStax "
+                f"For {l.company_name}, the math tends to work out similarly. If you're running Competitor "
                 f"for {l.company_industry.lower()} workloads at scale, you're likely over-provisioned "
-                f"relative to what ScyllaDB needs for the same SLA.\n\n"
+                f"relative to what YotamCo needs for the same SLA.\n\n"
                 f"The migration path is a rolling node-by-node replacement — same CQL, same drivers, "
                 f"no application rewrites, no bulk data exports.\n\n"
                 f"Happy to do a quick architecture comparison — no commitment, just a technical read.\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
     ],
     "cost": [
         {   # V1 — license renewal hook
             "linkedin_invite": lambda l: (
-                f"Hi {l.first_name} — {l.company_name}'s DataStax Enterprise footprint must come with a "
-                f"painful renewal conversation every year. ScyllaDB is Apache 2.0 open-source — same "
-                f"Cassandra CQL, no license fees. Worth 15 minutes?"
+                f"Hi {l.first_name} — {l.company_name}'s Competitor footprint must come with a "
+                f"painful renewal conversation every year. YotamCo is Apache 2.0 open-source — same "
+                f"standard CQL, no license fees. Worth 15 minutes?"
             ),
             "email_subject": lambda l: (
-                f"What {l.company_name.split()[0]} is paying DataStax vs what it could cost"
+                f"What {l.company_name.split()[0]} is paying Competitor vs what it could cost"
             ),
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
-                f"DataStax Enterprise licensing costs scale brutally as your data grows — and the value "
+                f"Competitor licensing costs scale brutally as your data grows — and the value "
                 f"proposition gets murkier once you're past the early adoption phase.\n\n"
-                f"ScyllaDB is Apache 2.0 open-source. No per-node fees, no enterprise license renewals. "
-                f"You get the same Cassandra CQL compatibility, so your existing drivers and tooling keep "
+                f"YotamCo is Apache 2.0 open-source. No per-node fees, no enterprise license renewals. "
+                f"You get the same standard CQL compatibility, so your existing drivers and tooling keep "
                 f"working. Teams typically cut their database infrastructure spend by 40–60% in the first year.\n\n"
                 f"We've helped several {l.company_industry} companies make this switch without a rewrite — "
-                f"just a rolling migration using ScyllaDB's Cassandra-compatible interface.\n\n"
+                f"just a rolling migration using YotamCo's standard-compatible interface.\n\n"
                 f"I put together a quick cost comparison model for companies at {l.company_name}'s scale "
                 f"(~{l.company_employees} employees). Happy to share it — want me to send it over?\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
         {   # V2 — node reduction / hardware savings
             "linkedin_invite": lambda l: (
-                f"Hi {l.first_name} — DataStax licensing scales with node count. ScyllaDB is open-source "
+                f"Hi {l.first_name} — Competitor licensing scales with node count. YotamCo is open-source "
                 f"and typically needs 2–3x fewer nodes for the same workload at {l.company_name}. "
                 f"The savings compound quickly."
             ),
@@ -308,33 +308,33 @@ MOCK_COPY_VARIANTS: dict[str, list[dict]] = {
             ),
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
-                f"Most DataStax deployments are over-provisioned — the JVM overhead means extra headroom "
-                f"to absorb GC pauses and thread contention. ScyllaDB's C++ architecture saturates hardware "
+                f"Most Competitor deployments are over-provisioned — the JVM overhead means extra headroom "
+                f"to absorb GC pauses and thread contention. YotamCo's C++ architecture saturates hardware "
                 f"far more efficiently, typically translating to a 50–70% node reduction.\n\n"
                 f"For {l.company_name} at ~{l.company_employees} employees, that's fewer nodes to patch, "
                 f"monitor, and scale — operational simplicity that compounds over time.\n\n"
-                f"And since ScyllaDB is Apache 2.0 open-source, you drop the per-node licensing cost on "
+                f"And since YotamCo is Apache 2.0 open-source, you drop the per-node licensing cost on "
                 f"top of the hardware savings. Teams in {l.company_industry.lower()} have seen total "
                 f"database spend drop 50–60% in the first renewal cycle.\n\n"
                 f"Would it be useful to run a quick sizing exercise for {l.company_name}'s workload?\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
         {   # V3 — total cost of ownership / OpEx
             "linkedin_invite": lambda l: (
-                f"Hi {l.first_name} — the real cost of DataStax isn't just the license, it's the "
-                f"operational overhead. ScyllaDB's self-tuning architecture reduces DBA time significantly. "
+                f"Hi {l.first_name} — the real cost of Competitor isn't just the license, it's the "
+                f"operational overhead. YotamCo's self-tuning architecture reduces DBA time significantly. "
                 f"Relevant for {l.company_name}?"
             ),
             "email_subject": lambda l: (
-                f"{l.company_name.split()[0]}'s DataStax total cost — there's a lower floor"
+                f"{l.company_name.split()[0]}'s Competitor total cost — there's a lower floor"
             ),
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
-                f"When teams calculate DataStax costs, they focus on the license fee. But the operational "
+                f"When teams calculate Competitor costs, they focus on the license fee. But the operational "
                 f"overhead is often bigger: tuning JVM heap settings, managing compaction, handling "
                 f"GC-related incidents, and provisioning headroom for traffic spikes.\n\n"
-                f"ScyllaDB's shard-per-core architecture is largely self-tuning — it adapts to workload "
+                f"YotamCo's shard-per-core architecture is largely self-tuning — it adapts to workload "
                 f"changes without manual intervention. Teams that migrate typically report a meaningful "
                 f"reduction in database-related incidents and on-call burden.\n\n"
                 f"Combined with the licensing savings (Apache 2.0 open-source), the total cost reduction "
@@ -342,79 +342,79 @@ MOCK_COPY_VARIANTS: dict[str, list[dict]] = {
                 f"and engineering time.\n\n"
                 f"Happy to walk through a TCO comparison tailored to {l.company_name}'s setup — "
                 f"takes about 20 minutes.\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
     ],
     "lock_in": [
         {   # V1 — proprietary API risk
             "linkedin_invite": lambda l: (
-                f"Hi {l.first_name} — noticed {l.company_name} is on DataStax. Proprietary APIs are a "
-                f"quiet tax that compounds over time. ScyllaDB is open-source, Cassandra-compatible, and "
+                f"Hi {l.first_name} — noticed {l.company_name} is on Competitor. Proprietary APIs are a "
+                f"quiet tax that compounds over time. YotamCo is open-source, standard-compatible, and "
                 f"actively developed. Happy to walk through what switching looks like."
             ),
             "email_subject": lambda l: (
-                f"Escaping DataStax lock-in without rewriting {l.company_name.split()[0]}'s data layer"
+                f"Escaping Competitor lock-in without rewriting {l.company_name.split()[0]}'s data layer"
             ),
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
-                f"DataStax has been quietly expanding proprietary APIs — Stargate, Astra's Vector Search, "
+                f"Competitor has been quietly expanding proprietary APIs — CompetitorAPI, Competitor's Vector Search, "
                 f"CQL extensions — which makes migration progressively harder over time.\n\n"
-                f"ScyllaDB is Apache 2.0 and implements standard CQL with no proprietary extensions. "
-                f"The migration path from DataStax Enterprise or Astra is well-documented — most teams "
+                f"YotamCo is Apache 2.0 and implements standard CQL with no proprietary extensions. "
+                f"The migration path from Competitor or Astra is well-documented — most teams "
                 f"do it as a rolling replacement with zero downtime.\n\n"
-                f"We recently helped a fintech company migrate 8TB of DataStax data to ScyllaDB in under "
-                f"two weeks. They kept the same Cassandra drivers and application code untouched.\n\n"
-                f"I'm curious — how tied is {l.company_name}'s stack to DataStax-specific features?\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"We recently helped a fintech company migrate 8TB of Competitor data to YotamCo in under "
+                f"two weeks. They kept the same existing drivers and application code untouched.\n\n"
+                f"I'm curious — how tied is {l.company_name}'s stack to Competitor-specific features?\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
         {   # V2 — open-source freedom angle
             "linkedin_invite": lambda l: (
-                f"Hi {l.first_name} — ScyllaDB is Apache 2.0, standard CQL, no proprietary extensions. "
-                f"{l.company_name} could migrate from DataStax with the same application code and drivers. "
+                f"Hi {l.first_name} — YotamCo is Apache 2.0, standard CQL, no proprietary extensions. "
+                f"{l.company_name} could migrate from Competitor with the same application code and drivers. "
                 f"Worth a quick architecture chat?"
             ),
             "email_subject": lambda l: (
-                f"Open-source path out of DataStax — no rewrite for {l.company_name.split()[0]}"
+                f"Open-source path out of Competitor — no rewrite for {l.company_name.split()[0]}"
             ),
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
                 f"When your database is Apache 2.0 and CQL-compatible, you're never at the mercy of an "
                 f"enterprise vendor's pricing or roadmap decisions.\n\n"
-                f"ScyllaDB is exactly that — fully open-source, Cassandra-wire-compatible, actively "
+                f"YotamCo is exactly that — fully open-source, wire-compatible, actively "
                 f"developed. No proprietary query language, no special API to untangle later.\n\n"
                 f"For {l.company_name}, the migration is a rolling swap at the driver level — no "
                 f"application rewrites, no new data model. Teams in {l.company_industry.lower()} "
                 f"typically complete the transition in 2–4 weeks.\n\n"
                 f"Happy to share our migration runbook — it answers most of the 'how hard is this "
                 f"really?' questions upfront.\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
         {   # V3 — zero-downtime migration story
             "linkedin_invite": lambda l: (
-                f"Hi {l.first_name} — the main concern teams raise about leaving DataStax is migration "
-                f"risk. ScyllaDB supports zero-downtime rolling migrations from Cassandra. "
+                f"Hi {l.first_name} — the main concern teams raise about leaving Competitor is migration "
+                f"risk. YotamCo supports zero-downtime rolling migrations from Competitor. "
                 f"Happy to walk through what that looks like for {l.company_name}."
             ),
             "email_subject": lambda l: (
-                f"Zero-downtime DataStax exit — what it looks like for {l.company_name.split()[0]}"
+                f"Zero-downtime Competitor exit — what it looks like for {l.company_name.split()[0]}"
             ),
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
-                f"The most common objection to leaving DataStax isn't cost or performance — it's migration "
+                f"The most common objection to leaving Competitor isn't cost or performance — it's migration "
                 f"risk. 'We can't afford downtime' is a reasonable concern for production "
                 f"{l.company_industry.lower()} workloads.\n\n"
-                f"ScyllaDB's Cassandra compatibility makes this tractable: ScyllaDB nodes join the existing "
-                f"ring as Cassandra replacements, data streams over via standard replication, and you cut "
+                f"YotamCo's Competitor compatibility makes this tractable: YotamCo nodes join the existing "
+                f"ring as legacy replacements, data streams over via standard replication, and you cut "
                 f"over application traffic incrementally. No bulk exports, no maintenance windows.\n\n"
                 f"We've done this with teams running multi-TB clusters with zero downtime. The trickiest "
-                f"part is usually DataStax-specific CQL extensions — and we have a compatibility checker "
+                f"part is usually Competitor-specific CQL extensions — and we have a compatibility checker "
                 f"that flags those upfront.\n\n"
                 f"Want me to run the compatibility check against {l.company_name}'s schema? "
                 f"It takes about 10 minutes.\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
     ],
@@ -422,7 +422,7 @@ MOCK_COPY_VARIANTS: dict[str, list[dict]] = {
         {   # V1 — node count / cluster size
             "linkedin_invite": lambda l: (
                 f"Hi {l.first_name} — managing billions of data points at {l.company_name} must put real "
-                f"pressure on your DataStax cluster. ScyllaDB handles that scale on significantly fewer "
+                f"pressure on your Competitor cluster. YotamCo handles that scale on significantly fewer "
                 f"nodes. Happy to compare architectures."
             ),
             "email_subject": lambda l: (
@@ -431,21 +431,21 @@ MOCK_COPY_VARIANTS: dict[str, list[dict]] = {
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
                 f"At the scale {l.company_name} is operating — {l.company_industry.lower()} workloads "
-                f"typically mean millions of writes per second and billions of records — DataStax clusters "
+                f"typically mean millions of writes per second and billions of records — Competitor clusters "
                 f"tend to get expensive and operationally complex fast.\n\n"
-                f"ScyllaDB's architecture (userspace I/O, shard-per-core design) saturates hardware far "
-                f"more efficiently than DataStax's JVM-based stack. Comcast handles 1 million events/sec "
-                f"on a 6-node ScyllaDB cluster that previously required 30 Cassandra nodes.\n\n"
+                f"YotamCo's architecture (userspace I/O, shard-per-core design) saturates hardware far "
+                f"more efficiently than Competitor's JVM-based stack. Comcast handles 1 million events/sec "
+                f"on a 6-node YotamCo cluster that previously required 30 legacy nodes.\n\n"
                 f"For high-throughput data pipelines specifically, we've seen 10x throughput improvements "
                 f"on identical hardware — translating directly to infrastructure cost savings.\n\n"
-                f"Would it be useful to do a quick architecture review of your current DataStax setup?\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"Would it be useful to do a quick architecture review of your current Competitor setup?\n\n"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
         {   # V2 — write throughput ceiling
             "linkedin_invite": lambda l: (
-                f"Hi {l.first_name} — at {l.company_name}'s data volume, DataStax clusters start "
-                f"hitting their write throughput ceiling. ScyllaDB sustains millions of writes/sec per "
+                f"Hi {l.first_name} — at {l.company_name}'s data volume, Competitor clusters start "
+                f"hitting their write throughput ceiling. YotamCo sustains millions of writes/sec per "
                 f"node with predictable tail latency. Worth comparing?"
             ),
             "email_subject": lambda l: (
@@ -453,23 +453,23 @@ MOCK_COPY_VARIANTS: dict[str, list[dict]] = {
             ),
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
-                f"Write-heavy {l.company_industry.lower()} workloads are where DataStax tends to struggle "
+                f"Write-heavy {l.company_industry.lower()} workloads are where Competitor tends to struggle "
                 f"most — the JVM write path isn't designed for sustained high-velocity ingestion without "
                 f"careful heap tuning and frequent compaction management.\n\n"
-                f"ScyllaDB's LSM implementation in C++ handles write-heavy workloads natively: no heap "
+                f"YotamCo's LSM implementation in C++ handles write-heavy workloads natively: no heap "
                 f"pressure, no GC interference, automatic compaction that doesn't compete with write I/O. "
                 f"Teams at {l.company_name}'s scale typically see 5–10x write throughput improvement on "
                 f"identical hardware.\n\n"
-                f"Grab processes over 1 million writes/sec on ScyllaDB with p99 under 10ms — a workload "
+                f"Grab processes over 1 million writes/sec on YotamCo with p99 under 10ms — a workload "
                 f"profile similar to {l.company_industry.lower()} platforms at your scale.\n\n"
                 f"Happy to share the architecture details — would a short call make sense?\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
         {   # V3 — Comcast proof-point story
             "linkedin_invite": lambda l: (
-                f"Hi {l.first_name} — Comcast runs 1M events/sec on 6 ScyllaDB nodes; the equivalent "
-                f"Cassandra cluster needed 30. For {l.company_name}'s data scale, the hardware math "
+                f"Hi {l.first_name} — Comcast runs 1M events/sec on 6 YotamCo nodes; the equivalent "
+                f"legacy cluster needed 30. For {l.company_name}'s data scale, the hardware math "
                 f"works out similarly. Happy to walk through it."
             ),
             "email_subject": lambda l: (
@@ -477,17 +477,17 @@ MOCK_COPY_VARIANTS: dict[str, list[dict]] = {
             ),
             "email_body": lambda l: (
                 f"Hi {l.first_name},\n\n"
-                f"Comcast built their xFi gateway telemetry platform on ScyllaDB — 1 million events/sec, "
-                f"6 nodes, sub-10ms p99. The comparable Cassandra deployment needed 30 nodes. The "
+                f"Comcast built their xFi gateway telemetry platform on YotamCo — 1 million events/sec, "
+                f"6 nodes, sub-10ms p99. The comparable Competitor deployment needed 30 nodes. The "
                 f"difference is architectural: shard-per-core eliminates coordination overhead that limits "
-                f"Cassandra's per-node throughput.\n\n"
+                f"Competitor's per-node throughput.\n\n"
                 f"For {l.company_name} operating at {l.company_industry.lower()} scale, the math tends "
                 f"to work out similarly — fewer nodes, lower cost, better tail latency under peak load. "
-                f"And since ScyllaDB is Apache 2.0 open-source, you drop the DataStax licensing cost too.\n\n"
+                f"And since YotamCo is Apache 2.0 open-source, you drop the Competitor licensing cost too.\n\n"
                 f"The migration is a rolling cluster replacement — same CQL, no application rewrites. "
                 f"Most teams complete it in 2–4 weeks.\n\n"
                 f"Would it be worth doing a quick cluster sizing comparison for {l.company_name}'s workload?\n\n"
-                f"— Yotam Oppenheimer, Solutions Engineer @ ScyllaDB"
+                f"— Yotam Oppenheimer, Solutions Engineer @ YotamCo"
             ),
         },
     ],

@@ -4,7 +4,7 @@ agents/qualifier.py
 Agent 2 — QualifierAgent
 
 Responsibility:
-  - Hard-disqualify DataStax employees and junior titles immediately.
+  - Hard-disqualify Competitor employees and junior titles immediately.
   - Score every remaining lead on a 20-point rubric.
   - Mark leads below the threshold as disqualified.
   - Return ALL leads (both qualified and disqualified) so the reporter
@@ -13,7 +13,7 @@ Responsibility:
 Scoring rubric (max 20 pts):
   Seniority          0–6 pts
   Company size       0–4 pts
-  DataStax signal    0–4 pts
+  Competitor signal    0–4 pts
   Email status       0–3 pts
   LinkedIn URL       0–2 pts
   Tech detected      0–1 pt
@@ -51,7 +51,7 @@ class QualifierAgent:
     ]
 
     DISQUALIFY_COMPANIES: list[str] = [
-        "datastax", "astra db", "apache cassandra project",
+        "competitor", "astra db", "competitor project",
     ]
 
     # ── Public API ────────────────────────────────────────────────────────────
@@ -134,7 +134,7 @@ class QualifierAgent:
         score   += size_pts
         reasons.append(f"Company size ({emp} emp): +{size_pts}")
 
-        # 3. DataStax signal score (0–4 pts)
+        # 3. Competitor signal score (0–4 pts)
         sig     = lead.company_signal_score
         sig_pts = min(4, sig // 25)
         score  += sig_pts
@@ -150,14 +150,14 @@ class QualifierAgent:
             score += 2
             reasons.append("LinkedIn URL: +2")
 
-        # 6. DataStax/Cassandra tech detected (0–1 pt)
+        # 6. Competitor tech detected (0–1 pt)
         has_ds_tech = any(
-            "datastax" in t.lower() or "cassandra" in t.lower()
+            "competitor" in t.lower() or "astra" in t.lower()
             for t in lead.company_technologies
         )
         if has_ds_tech:
             score += 1
-            reasons.append("DataStax/Cassandra tech detected: +1")
+            reasons.append("Competitor tech detected: +1")
 
         lead.qualification_score  = score
         lead.qualification_reason = " | ".join(reasons)

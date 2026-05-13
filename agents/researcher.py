@@ -67,7 +67,7 @@ class ResearcherAgent:
 
         description  = company_base.get("short_description", "")
         industry     = org.get("industry") or company_base.get("industry", "")
-        signal_score = company_base.get("datastax_signal_score", 0)
+        signal_score = company_base.get("competitor_signal_score", 0)
         pain_cat     = self._detect_pain(description, tech_names, industry)
 
         return Lead(
